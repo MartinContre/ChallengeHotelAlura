@@ -1,4 +1,4 @@
-package exception;
+package utilities.exception;
 
 /**
  * Exception thrown when a key is not found.

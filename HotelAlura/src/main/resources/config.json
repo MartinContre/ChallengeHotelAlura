@@ -1,5 +1,5 @@
 {
-  "URL": "jdbc:mysql://localhost/alura_hotel?useTimeZone=true&serverTimeZone=UTC",
+  "URL": "jdbc:mysql://localhost/hotel_alura?useTimeZone=true&serverTimeZone=UTC",
   "USER": "root",
   "PASSWORD": "Root23+05"
 }

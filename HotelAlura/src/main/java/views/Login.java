@@ -1,11 +1,17 @@
 package views;
 
+import controller.UserController;
+import model.User;
+import utilities.FormValidationUtility;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.Serial;
+import java.util.List;
 import java.util.Objects;
 
 public class Login extends JFrame {
@@ -13,12 +19,15 @@ public class Login extends JFrame {
 	/**
 	 * 
 	 */
+	@Serial
 	private static final long serialVersionUID = 1L;
-	private JPanel contentPane;
 	private JTextField txtUsuario;
 	private JPasswordField txtContrasena;
 	int xMouse, yMouse;
 	private JLabel labelExit;
+
+	private static User user;
+	private final UserController userController;
 
 	/**
 	 * Launch the application.
@@ -36,15 +45,52 @@ public class Login extends JFrame {
 		});
 	}
 
+	public User getUser() {
+		if (Login.user == null) {
+			throw new RuntimeException("Must fill fields for user and password");
+		}
+		return Login.user;
+	}
+
+	public void setUser(User user) {
+		Login.user = user;
+	}
+
+	private void clearFields() {
+		txtUsuario.setText("");
+		txtContrasena.setText("");
+	}
+
+	private void validateUser() {
+		String userName = txtUsuario.getText();
+		String password = String.valueOf(txtContrasena.getPassword());
+		List<User> users = this.userController.list(userName, password);
+
+		if (users.isEmpty()) {
+			JOptionPane.showMessageDialog(
+					null,
+					"User or password incorrect"
+			);
+		} else {
+			users.forEach(this::setUser);
+			if (FormValidationUtility.isUserCorrect(getUser(), userName, txtContrasena)) {
+				this.dispose();
+				MenuUsuario menuUsuario = new MenuUsuario();
+				menuUsuario.setVisible(true);
+			}
+		}
+	}
+
 	/**
 	 * Create the frame.
 	 */
 	public Login() {
+		this.userController = new UserController();
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 788, 527);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
@@ -66,7 +112,7 @@ public class Login extends JFrame {
 		JLabel imgHotel = new JLabel("");
 		imgHotel.setBounds(0, 0, 304, 538);
 		panel_1.add(imgHotel);
-		imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/imagenes/img-hotel-login-.png"))));
+		imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/img-hotel-login-.png"))));
 		
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(251, 0, 53, 36);
@@ -182,7 +228,7 @@ public class Login extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login();
+				validateUser();
 			}
 		});
 		btnLogin.setBackground(SystemColor.textHighlight);
@@ -200,7 +246,7 @@ public class Login extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/imagenes/lOGO-50PX.png"))));
+		lblNewLabel_1.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/lOGO-50PX.png"))));
 		lblNewLabel_1.setBounds(65, 65, 48, 59);
 		panel.add(lblNewLabel_1);
 		
@@ -223,21 +269,7 @@ public class Login extends JFrame {
 		panel.add(header);
 		header.setLayout(null);
 	}
-	
-	private void Login() {
-		 String Usuario= "admin";
-	     String Contrasena="admin";
 
-	        String contrase=new String (txtContrasena.getPassword());
-
-	        if(txtUsuario.getText().equals(Usuario) && contrase.equals(Contrasena)){
-	            MenuUsuario menu = new MenuUsuario();
-	            menu.setVisible(true);
-	            dispose();	 
-	        }else {
-	            JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
-	        }
-	} 
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();

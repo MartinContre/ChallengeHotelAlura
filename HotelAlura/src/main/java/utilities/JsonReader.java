@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import exception.KeyNotFoundException;
+import utilities.exception.KeyNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +18,7 @@ import java.util.Arrays;
  * Utility class for reading JSON files and retrieving values.
  */
 public class JsonReader {
-    private static final Logger logger = LogManager.getLogger(JsonReader.class);
+    private static final Logger LOGGER = LogManager.getLogger(JsonReader.class);
 
     private final JsonObject jsonObject;
 
@@ -41,7 +41,7 @@ public class JsonReader {
             Object obj = JsonParser.parseReader(reader);
             jsonObject = (JsonObject) obj;
         } catch (IOException e) {
-            logger.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
+            LOGGER.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
             throw new RuntimeException(Arrays.toString(e.getStackTrace()));
         }
     }
@@ -78,7 +78,7 @@ public class JsonReader {
 
             throw new KeyNotFoundException("El valor de la clave no es un arreglo en el archivo JSON: " + key);
         } catch (IllegalStateException | KeyNotFoundException e) {
-            logger.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
+            LOGGER.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
             return new String[0];
         }
     }

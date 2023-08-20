@@ -1,6 +1,10 @@
 package views;
 
 import com.toedter.calendar.JDateChooser;
+import model.Booking;
+import utilities.DateConvertor;
+import utilities.FormValidationUtility;
+import utilities.JOptionPane.ErrorMessages;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,9 +15,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 
-@SuppressWarnings("serial")
 public class ReservasView extends JFrame {
 
 	private JPanel contentPane;
@@ -24,6 +33,8 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
+	private static Booking booking;
+
 
 	/**
 	 * Launch the application.
@@ -45,8 +56,9 @@ public class ReservasView extends JFrame {
 	 * Create the frame.
 	 */
 	public ReservasView() {
+
 		super("Reserva");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/imagenes/aH-40px.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/images/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 560);
 		setResizable(false);
@@ -121,13 +133,13 @@ public class ReservasView extends JFrame {
 		JLabel logo = new JLabel("");
 		logo.setBounds(197, 68, 104, 107);
 		panel_1.add(logo);
-		logo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/Ha-100px.png")));
+		logo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/Ha-100px.png"))));
 		
 		JLabel imagenFondo = new JLabel("");
 		imagenFondo.setBounds(0, 140, 500, 409);
 		panel_1.add(imagenFondo);
 		imagenFondo.setBackground(Color.WHITE);
-		imagenFondo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/reservas-img-3.png")));
+		imagenFondo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/reservas-img-3.png"))));
 		
 		JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
@@ -222,17 +234,11 @@ public class ReservasView extends JFrame {
 		labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
 		labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
 		
-		JLabel lblSiguiente = new JLabel("SIGUIENTE");
-		lblSiguiente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSiguiente.setForeground(Color.WHITE);
-		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
-		lblSiguiente.setBounds(0, 0, 122, 35);
-		
 		
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
-		txtFechaEntrada.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
+		txtFechaEntrada.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/icon-reservas.png"))));
 		txtFechaEntrada.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
 		txtFechaEntrada.setBounds(68, 161, 289, 35);
 		txtFechaEntrada.getCalendarButton().setBounds(268, 0, 21, 33);
@@ -243,17 +249,13 @@ public class ReservasView extends JFrame {
 		panel.add(txtFechaEntrada);
 
 		txtFechaSalida = new JDateChooser();
-		txtFechaSalida.getCalendarButton().setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/icon-reservas.png")));
+		txtFechaSalida.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/icon-reservas.png"))));
 		txtFechaSalida.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 11));
 		txtFechaSalida.setBounds(68, 246, 289, 35);
 		txtFechaSalida.getCalendarButton().setBounds(267, 1, 21, 31);
 		txtFechaSalida.setBackground(Color.WHITE);
 		txtFechaSalida.setFont(new Font("Roboto", Font.PLAIN, 18));
-		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent evt) {
-				//Activa el evento, después del usuario seleccionar las fechas se debe calcular el valor de la reserva
-			}
-		});
+
 		txtFechaSalida.setDateFormatString("yyyy-MM-dd");
 		txtFechaSalida.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaSalida.setBorder(new LineBorder(new Color(255, 255, 255), 0));
@@ -270,36 +272,110 @@ public class ReservasView extends JFrame {
 		panel.add(txtValor);
 		txtValor.setColumns(10);
 
+		txtFechaSalida.addPropertyChangeListener(new PropertyChangeListener() {
+			public void propertyChange(PropertyChangeEvent evt) {
+				getBookingValue();
+			}
+		});
 
-		txtFormaPago = new JComboBox();
+
+		txtFormaPago = new JComboBox<>();
 		txtFormaPago.setBounds(68, 417, 289, 38);
 		txtFormaPago.setBackground(SystemColor.text);
 		txtFormaPago.setBorder(new LineBorder(new Color(255, 255, 255), 1, true));
 		txtFormaPago.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtFormaPago.setModel(new DefaultComboBoxModel(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
+		txtFormaPago.setModel(new DefaultComboBoxModel<>(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
 		panel.add(txtFormaPago);
 
-		JPanel btnsiguiente = new JPanel();
-		btnsiguiente.addMouseListener(new MouseAdapter() {
+		JPanel nextBtn = new JPanel();
+		nextBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
-					registro.setVisible(true);
-				} else {
-					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-				}
+				saveBookingReference();
 			}						
 		});
-		btnsiguiente.setLayout(null);
-		btnsiguiente.setBackground(SystemColor.textHighlight);
-		btnsiguiente.setBounds(238, 493, 122, 35);
-		panel.add(btnsiguiente);
-		btnsiguiente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		nextBtn.setLayout(null);
+		nextBtn.setBackground(SystemColor.textHighlight);
+		nextBtn.setBounds(238, 493, 122, 35);
+		panel.add(nextBtn);
+		nextBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-
+        JLabel lblSiguiente = new JLabel("SIGUIENTE");
+		lblSiguiente.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSiguiente.setForeground(Color.WHITE);
+		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
+		lblSiguiente.setBounds(0, 0, 122, 35);
+		nextBtn.add(lblSiguiente);
 	}
-		
+
+	public Booking getBooking() {
+		if (ReservasView.booking == null) {
+			throw new RuntimeException("Empty form, please fill");
+		}
+		return ReservasView.booking;
+	}
+
+	public void setBooking(Booking booking) {
+		ReservasView.booking = booking;
+	}
+
+	public void saveBookingReference() {
+		if (FormValidationUtility.isBookingFormValid(txtFechaEntrada, txtFechaSalida, txtValor.getText(), txtFormaPago)){
+			Date dateCheckIn = Date.valueOf(DateConvertor.convertDateToLocalDate(txtFechaEntrada.getDate()));
+			Date dateCheckOut = Date.valueOf(DateConvertor.convertDateToLocalDate(txtFechaSalida.getDate()));
+			String valorReservaString = txtValor.getText();
+			BigDecimal valueBookingToBigDecimal = new BigDecimal(valorReservaString);
+
+			setBooking(new Booking(
+					dateCheckIn,
+					dateCheckOut,
+					valueBookingToBigDecimal,
+					txtFormaPago.getSelectedItem().toString()
+			));
+			clearFields();
+			this.dispose();
+			RegistroHuesped guestRegister = new RegistroHuesped();
+			guestRegister.setVisible(true);
+		}
+	}
+
+	private void clearFields() {
+		txtFechaEntrada.setCalendar(null);
+		txtFechaSalida.setCalendar(null);
+		txtValor.setText("0.0");
+		txtFormaPago.setSelectedIndex(0);
+	}
+
+	private	BigDecimal getBookingValue() {
+		BigDecimal priceNight = BigDecimal.valueOf(15.5);
+		BigDecimal totalPrice = new BigDecimal("0.0");
+		if (txtFechaEntrada.getDate() == null && txtFechaSalida.getDate() == null) {
+			txtValor.setText("");
+		} else {
+
+			var checkIn = DateConvertor.convertDateToLocalDate(txtFechaEntrada.getDate());
+			var checkOut = DateConvertor.convertDateToLocalDate(txtFechaSalida.getDate());
+			var today = LocalDate.now();
+
+			var days = ChronoUnit.DAYS.between(checkIn, checkOut);
+			var checkInActual = ChronoUnit.DAYS.between(today, checkIn);
+			var checkOutActual = ChronoUnit.DAYS.between(today, checkOut);
+
+			if (days > 0 && checkInActual >= 0 && checkOutActual >= 0) {
+				BigDecimal bookingValue = priceNight.multiply(BigDecimal.valueOf(days));
+				totalPrice = bookingValue.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
+
+				txtValor.setText(String.valueOf(totalPrice));
+			} else {
+				ErrorMessages.showErrorMessage("Dates no correct",
+						"Dates selected not match pattern or may be before today");
+				txtFechaEntrada.setDate(null);
+				txtFechaSalida.setDate(null);
+			}
+		}
+		return totalPrice;
+	}
+
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();

@@ -1,16 +1,34 @@
 package views;
 
-import com.toedter.calendar.JDateChooser;
-
-import javax.swing.*;
+import java.awt.EventQueue;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import javax.swing.JTextField;
+import java.awt.Color;
+import com.toedter.calendar.JDateChooser;
+import controller.BookingController;
+import controller.GuestController;
+import model.Guest;
+import utilities.DateConvertor;
+import utilities.FormValidationUtility;
+
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.JLabel;
+import java.awt.Font;
+import javax.swing.ImageIcon;
+import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 import java.text.Format;
+import java.awt.Toolkit;
+import java.util.Objects;
+import javax.swing.SwingConstants;
+import javax.swing.JSeparator;
 
-@SuppressWarnings("serial")
 public class RegistroHuesped extends JFrame {
 
 	private JPanel contentPane;
@@ -23,6 +41,10 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	int xMouse, yMouse;
+
+	ReservasView reservasView = new ReservasView();
+	private final GuestController guestController;
+	private final BookingController bookingController;
 
 	/**
 	 * Launch the application.
@@ -44,8 +66,10 @@ public class RegistroHuesped extends JFrame {
 	 * Create the frame.
 	 */
 	public RegistroHuesped() {
+		this.guestController = new GuestController();
+		this.bookingController = new BookingController();
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/images/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 634);
 		contentPane = new JPanel();
@@ -127,12 +151,12 @@ public class RegistroHuesped extends JFrame {
 		
 		txtFechaN = new JDateChooser();
 		txtFechaN.setBounds(560, 278, 285, 36);
-		txtFechaN.getCalendarButton().setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/icon-reservas.png")));
+		txtFechaN.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/icon-reservas.png"))));
 		txtFechaN.getCalendarButton().setBackground(SystemColor.textHighlight);
 		txtFechaN.setDateFormatString("yyyy-MM-dd");
 		contentPane.add(txtFechaN);
 		
-		txtNacionalidad = new JComboBox();
+		txtNacionalidad = new JComboBox<>();
 		txtNacionalidad.setBounds(560, 350, 289, 36);
 		txtNacionalidad.setBackground(SystemColor.text);
 		txtNacionalidad.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -238,6 +262,7 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// To Do
 			}
 		});
 		btnguardar.setLayout(null);
@@ -261,12 +286,12 @@ public class RegistroHuesped extends JFrame {
 		JLabel imagenFondo = new JLabel("");
 		imagenFondo.setBounds(0, 121, 479, 502);
 		panel.add(imagenFondo);
-		imagenFondo.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/registro.png")));
+		imagenFondo.setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/registro.png"))));
 		
 		JLabel logo = new JLabel("");
 		logo.setBounds(194, 39, 104, 107);
 		panel.add(logo);
-		logo.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/Ha-100px.png")));
+		logo.setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/Ha-100px.png"))));
 		
 		JPanel btnexit = new JPanel();
 		btnexit.setBounds(857, 0, 53, 36);
@@ -298,8 +323,42 @@ public class RegistroHuesped extends JFrame {
 		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
 		labelExit.setForeground(SystemColor.black);
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
+
 	}
-	
+
+	private void saveBooking() {
+		if (FormValidationUtility.isGuestFormValid(
+				txtNombre.getText(),
+				txtApellido.getText(),
+				txtFechaN,
+				txtTelefono.getText()
+				)) {
+			this.bookingController.insert(reservasView.getBooking());
+			saveGuest();
+		}
+	}
+
+	private void saveGuest() {
+		Date birthDate = Date.valueOf(DateConvertor.convertDateToLocalDate(txtFechaN.getDate()));
+		Guest guest = new Guest(
+				txtNombre.getText(),
+				txtApellido.getText(),
+				birthDate,
+				Objects.requireNonNull(txtNacionalidad.getSelectedItem()).toString(),
+				txtTelefono.getText()
+		);
+	}
+
+	private void showSaveMessage() {
+		Exito success = new Exito();
+		success.setVisible(true);
+		this.dispose();
+	}
+
+	private void clearFields() {
+		txtNombre.setText("");
+		txtApellido.setText("");
+	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
 	 private void headerMousePressed(MouseEvent evt) {
