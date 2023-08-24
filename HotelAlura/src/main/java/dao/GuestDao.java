@@ -1,15 +1,13 @@
 package dao;
 
 import model.Guest;
-import utilities.ColumnsKey;
 import utilities.InsetFieldGenerator;
-import utilities.JOptionPane.ErrorMessages;
+import utilities.enums.ColumnsKey;
+import utilities.enums.TableNames;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class GuestDao extends BaseDao<Guest> {
     private static final String INSERT_VALUES = "(?, ?, ?, ?, ?, ?)";
@@ -20,7 +18,7 @@ public class GuestDao extends BaseDao<Guest> {
     };
 
     public GuestDao(Connection connection) {
-        tableName = "guests";
+        tableName = TableNames.GUESTS.getKey();
         this.connection = connection;
     }
 
@@ -79,40 +77,19 @@ public class GuestDao extends BaseDao<Guest> {
         }
     }
 
-    public void insert(Guest guest) {
-        String sql = String.format("INSERT INTO %s \n" +
-                "%s VALUES %s", tableName, getInsertFields(), INSERT_VALUES);
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
-            preparedStatement(statement, guest);
-            try (ResultSet resultSet = statement.getGeneratedKeys()){
-                while (resultSet.next()) {
-                    guest.setId(resultSet.getInt(1));
-                    LOGGER.info(String.format("Saved with exit guest: %s", guest));
-                }
-            }
-        } catch (SQLException e) {
-            LOGGER.error(ERROR_SQL_MESSAGE + e.getMessage());
-            ErrorMessages.showErrorMessage(
-                    "Error while doing register",
-                    "Error saving data");
-            throw new RuntimeException(e);
-        }
-    }
+    public Integer[] deleteEmbeddedBookings(int guestId, String bookingId) {
+        Integer[] deleted = new Integer[2];
 
-    public Map<String, Integer> deleteEmbeddedBookings(Integer guestId, String bookingId) {
-        String sql = String.format("DELETE FROM %s WHERE %s = ?", tableName, ColumnsKey.ID.getKey());
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setInt(1, guestId);
-            statement.execute();
-            BookingDao bookingsDao = new BookingDao(connection);
-            Integer deletedBooking = bookingsDao.delete(bookingId);
-            Map<String, Integer> deleted = new HashMap<>();
-            deleted.put("Guest", statement.getUpdateCount());
-            deleted.put("Booking", deletedBooking);
-            return deleted;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        Integer deletedGuestRows = delete(guestId);
+
+        BookingDao bookingsDao = new BookingDao(connection);
+        Integer deletedBookingRows = bookingsDao.delete(bookingId);
+
+
+        deleted[0] = deletedGuestRows;
+        deleted[1] = deletedBookingRows;
+
+        return deleted;
     }
 
     @Override
@@ -129,13 +106,8 @@ public class GuestDao extends BaseDao<Guest> {
     protected void setInsertStatementValues(PreparedStatement statement, Guest guest) {
         try {
             LOGGER.info("Setting insert statement values for guest model");
-            statement.setString(1, guest.getName());
-            statement.setString(2, guest.getSurname());
-            statement.setDate(3, guest.getBirthdate());
-            statement.setString(4, guest.getNationality());
-            statement.setString(5, guest.getPhone());
-            statement.setString(6, guest.getBookingId());
-        } catch (SQLException e) {
+            preparedStatement(statement, guest);
+        } catch (Exception e) {
             LOGGER.error("Couldn't set statement values: " + e.getMessage());
         }
     }
@@ -149,13 +121,8 @@ public class GuestDao extends BaseDao<Guest> {
     protected void setUpdateStatementValues(PreparedStatement statement, Guest guest) {
         try {
             LOGGER.info("Setting update statement values for author model");
-            statement.setString(1, guest.getName());
-            statement.setString(2, guest.getSurname());
-            statement.setDate(3, guest.getBirthdate());
-            statement.setString(4, guest.getNationality());
-            statement.setString(5, guest.getPhone());
-            statement.setString(6, guest.getBookingId());
-        } catch (SQLException e) {
+            preparedStatement(statement, guest);
+        } catch (Exception e) {
             LOGGER.error("Couldn't sut update statements values: " + e.getMessage());
         }
     }
@@ -179,6 +146,7 @@ public class GuestDao extends BaseDao<Guest> {
             statement.setString(5, guest.getPhone());
             statement.setString(6, guest.getBookingId());
         } catch (SQLException e) {
+            LOGGER.error("Couldn't prepared statements values: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }

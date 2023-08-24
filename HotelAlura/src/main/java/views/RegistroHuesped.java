@@ -10,6 +10,8 @@ import com.toedter.calendar.JDateChooser;
 import controller.BookingController;
 import controller.GuestController;
 import model.Guest;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import utilities.DateConvertor;
 import utilities.FormValidationUtility;
 
@@ -30,16 +32,17 @@ import javax.swing.SwingConstants;
 import javax.swing.JSeparator;
 
 public class RegistroHuesped extends JFrame {
+	private static final Logger LOGGER = LogManager.getLogger(JFrame.class);
 
-	private JPanel contentPane;
-	private JTextField txtNombre;
-	private JTextField txtApellido;
-	private JTextField txtTelefono;
-	private JTextField txtNreserva;
-	private JDateChooser txtFechaN;
-	private JComboBox<Format> txtNacionalidad;
-	private JLabel labelExit;
-	private JLabel labelAtras;
+	private final JPanel contentPane;
+	private final JTextField nameTxt;
+	private final JTextField surnameTxt;
+	private final JTextField phoneTxt;
+	private final JTextField bookingIdText;
+	private final JDateChooser birthdateTxt;
+	private final JComboBox<Format> nationalityTxt;
+	private final JLabel exitLabel;
+	private final JLabel backLabel;
 	int xMouse, yMouse;
 
 	ReservasView reservasView = new ReservasView();
@@ -50,16 +53,14 @@ public class RegistroHuesped extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					RegistroHuesped frame = new RegistroHuesped();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                RegistroHuesped frame = new RegistroHuesped();
+                frame.setVisible(true);
+            } catch (Exception e) {
+				LOGGER.error(e.getMessage());
+            }
+        });
 	}
 
 	/**
@@ -112,12 +113,12 @@ public class RegistroHuesped extends JFrame {
 			@Override
 			public void mouseEntered(MouseEvent e) {
 				btnAtras.setBackground(Color.white);
-				labelAtras.setForeground(Color.black);
+				backLabel.setForeground(Color.black);
 			}			
 			@Override
 			public void mouseExited(MouseEvent e) {
 				 btnAtras.setBackground(new Color(12, 138, 199));
-			     labelAtras.setForeground(Color.white);
+			     backLabel.setForeground(Color.white);
 			}
 		});
 		btnAtras.setLayout(null);
@@ -125,43 +126,43 @@ public class RegistroHuesped extends JFrame {
 		btnAtras.setBounds(0, 0, 53, 36);
 		header.add(btnAtras);
 		
-		labelAtras = new JLabel("<");
-		labelAtras.setHorizontalAlignment(SwingConstants.CENTER);
-		labelAtras.setForeground(Color.WHITE);
-		labelAtras.setFont(new Font("Roboto", Font.PLAIN, 23));
-		labelAtras.setBounds(0, 0, 53, 36);
-		btnAtras.add(labelAtras);
+		backLabel = new JLabel("<");
+		backLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		backLabel.setForeground(Color.WHITE);
+		backLabel.setFont(new Font("Roboto", Font.PLAIN, 23));
+		backLabel.setBounds(0, 0, 53, 36);
+		btnAtras.add(backLabel);
 		
 		
-		txtNombre = new JTextField();
-		txtNombre.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtNombre.setBounds(560, 135, 285, 33);
-		txtNombre.setBackground(Color.WHITE);
-		txtNombre.setColumns(10);
-		txtNombre.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtNombre);
+		nameTxt = new JTextField();
+		nameTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
+		nameTxt.setBounds(560, 135, 285, 33);
+		nameTxt.setBackground(Color.WHITE);
+		nameTxt.setColumns(10);
+		nameTxt.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		contentPane.add(nameTxt);
 		
-		txtApellido = new JTextField();
-		txtApellido.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtApellido.setBounds(560, 204, 285, 33);
-		txtApellido.setColumns(10);
-		txtApellido.setBackground(Color.WHITE);
-		txtApellido.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtApellido);
+		surnameTxt = new JTextField();
+		surnameTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
+		surnameTxt.setBounds(560, 204, 285, 33);
+		surnameTxt.setColumns(10);
+		surnameTxt.setBackground(Color.WHITE);
+		surnameTxt.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		contentPane.add(surnameTxt);
 		
-		txtFechaN = new JDateChooser();
-		txtFechaN.setBounds(560, 278, 285, 36);
-		txtFechaN.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/icon-reservas.png"))));
-		txtFechaN.getCalendarButton().setBackground(SystemColor.textHighlight);
-		txtFechaN.setDateFormatString("yyyy-MM-dd");
-		contentPane.add(txtFechaN);
+		birthdateTxt = new JDateChooser();
+		birthdateTxt.setBounds(560, 278, 285, 36);
+		birthdateTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/icon-reservas.png"))));
+		birthdateTxt.getCalendarButton().setBackground(SystemColor.textHighlight);
+		birthdateTxt.setDateFormatString("yyyy-MM-dd");
+		contentPane.add(birthdateTxt);
 		
-		txtNacionalidad = new JComboBox<>();
-		txtNacionalidad.setBounds(560, 350, 289, 36);
-		txtNacionalidad.setBackground(SystemColor.text);
-		txtNacionalidad.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtNacionalidad.setModel(new DefaultComboBoxModel(new String[] {"afgano-afgana", "alemán-", "alemana", "árabe-árabe", "argentino-argentina", "australiano-australiana", "belga-belga", "boliviano-boliviana", "brasileño-brasileña", "camboyano-camboyana", "canadiense-canadiense", "chileno-chilena", "chino-china", "colombiano-colombiana", "coreano-coreana", "costarricense-costarricense", "cubano-cubana", "danés-danesa", "ecuatoriano-ecuatoriana", "egipcio-egipcia", "salvadoreño-salvadoreña", "escocés-escocesa", "español-española", "estadounidense-estadounidense", "estonio-estonia", "etiope-etiope", "filipino-filipina", "finlandés-finlandesa", "francés-francesa", "galés-galesa", "griego-griega", "guatemalteco-guatemalteca", "haitiano-haitiana", "holandés-holandesa", "hondureño-hondureña", "indonés-indonesa", "inglés-inglesa", "iraquí-iraquí", "iraní-iraní", "irlandés-irlandesa", "israelí-israelí", "italiano-italiana", "japonés-japonesa", "jordano-jordana", "laosiano-laosiana", "letón-letona", "letonés-letonesa", "malayo-malaya", "marroquí-marroquí", "mexicano-mexicana", "nicaragüense-nicaragüense", "noruego-noruega", "neozelandés-neozelandesa", "panameño-panameña", "paraguayo-paraguaya", "peruano-peruana", "polaco-polaca", "portugués-portuguesa", "puertorriqueño-puertorriqueño", "dominicano-dominicana", "rumano-rumana", "ruso-rusa", "sueco-sueca", "suizo-suiza", "tailandés-tailandesa", "taiwanes-taiwanesa", "turco-turca", "ucraniano-ucraniana", "uruguayo-uruguaya", "venezolano-venezolana", "vietnamita-vietnamita"}));
-		contentPane.add(txtNacionalidad);
+		nationalityTxt = new JComboBox<>();
+		nationalityTxt.setBounds(560, 350, 289, 36);
+		nationalityTxt.setBackground(SystemColor.text);
+		nationalityTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
+		nationalityTxt.setModel(new DefaultComboBoxModel(new String[] {"afgano-afgana", "alemán-", "alemana", "árabe-árabe", "argentino-argentina", "australiano-australiana", "belga-belga", "boliviano-boliviana", "brasileño-brasileña", "camboyano-camboyana", "canadiense-canadiense", "chileno-chilena", "chino-china", "colombiano-colombiana", "coreano-coreana", "costarricense-costarricense", "cubano-cubana", "danés-danesa", "ecuatoriano-ecuatoriana", "egipcio-egipcia", "salvadoreño-salvadoreña", "escocés-escocesa", "español-española", "estadounidense-estadounidense", "estonio-estonia", "etiope-etiope", "filipino-filipina", "finlandés-finlandesa", "francés-francesa", "galés-galesa", "griego-griega", "guatemalteco-guatemalteca", "haitiano-haitiana", "holandés-holandesa", "hondureño-hondureña", "indonés-indonesa", "inglés-inglesa", "iraquí-iraquí", "iraní-iraní", "irlandés-irlandesa", "israelí-israelí", "italiano-italiana", "japonés-japonesa", "jordano-jordana", "laosiano-laosiana", "letón-letona", "letonés-letonesa", "malayo-malaya", "marroquí-marroquí", "mexicano-mexicana", "nicaragüense-nicaragüense", "noruego-noruega", "neozelandés-neozelandesa", "panameño-panameña", "paraguayo-paraguaya", "peruano-peruana", "polaco-polaca", "portugués-portuguesa", "puertorriqueño-puertorriqueño", "dominicano-dominicana", "rumano-rumana", "ruso-rusa", "sueco-sueca", "suizo-suiza", "tailandés-tailandesa", "taiwanes-taiwanesa", "turco-turca", "ucraniano-ucraniana", "uruguayo-uruguaya", "venezolano-venezolana", "vietnamita-vietnamita"}));
+		contentPane.add(nationalityTxt);
 		
 		JLabel lblNombre = new JLabel("NOMBRE");
 		lblNombre.setBounds(562, 119, 253, 14);
@@ -193,13 +194,13 @@ public class RegistroHuesped extends JFrame {
 		lblTelefono.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		contentPane.add(lblTelefono);
 		
-		txtTelefono = new JTextField();
-		txtTelefono.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtTelefono.setBounds(560, 424, 285, 33);
-		txtTelefono.setColumns(10);
-		txtTelefono.setBackground(Color.WHITE);
-		txtTelefono.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtTelefono);
+		phoneTxt = new JTextField();
+		phoneTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
+		phoneTxt.setBounds(560, 424, 285, 33);
+		phoneTxt.setColumns(10);
+		phoneTxt.setBackground(Color.WHITE);
+		phoneTxt.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		contentPane.add(phoneTxt);
 		
 		JLabel lblTitulo = new JLabel("REGISTRO HUÉSPED");
 		lblTitulo.setBounds(606, 55, 234, 42);
@@ -212,14 +213,15 @@ public class RegistroHuesped extends JFrame {
 		lblNumeroReserva.setForeground(SystemColor.textInactiveText);
 		lblNumeroReserva.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		contentPane.add(lblNumeroReserva);
-		
-		txtNreserva = new JTextField();
-		txtNreserva.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtNreserva.setBounds(560, 495, 285, 33);
-		txtNreserva.setColumns(10);
-		txtNreserva.setBackground(Color.WHITE);
-		txtNreserva.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		contentPane.add(txtNreserva);
+		lblNumeroReserva.setText(reservasView.getBooking().getBookingId());
+
+		bookingIdText = new JTextField();
+		bookingIdText.setFont(new Font("Roboto", Font.PLAIN, 16));
+		bookingIdText.setBounds(560, 495, 285, 33);
+		bookingIdText.setColumns(10);
+		bookingIdText.setBackground(Color.WHITE);
+		bookingIdText.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		contentPane.add(bookingIdText);
 		
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setBounds(560, 170, 289, 2);
@@ -262,7 +264,8 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// To Do
+				e.consume();
+				saveBooking();
 			}
 		});
 		btnguardar.setLayout(null);
@@ -293,10 +296,10 @@ public class RegistroHuesped extends JFrame {
 		panel.add(logo);
 		logo.setIcon(new ImageIcon(Objects.requireNonNull(RegistroHuesped.class.getResource("/images/Ha-100px.png"))));
 		
-		JPanel btnexit = new JPanel();
-		btnexit.setBounds(857, 0, 53, 36);
-		contentPane.add(btnexit);
-		btnexit.addMouseListener(new MouseAdapter() {
+		JPanel btnExit = new JPanel();
+		btnExit.setBounds(857, 0, 53, 36);
+		contentPane.add(btnExit);
+		btnExit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				JFrame principal = new MenuPrincipal();
@@ -305,33 +308,33 @@ public class RegistroHuesped extends JFrame {
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnexit.setBackground(Color.red);
-				labelExit.setForeground(Color.white);
+				btnExit.setBackground(Color.red);
+				exitLabel.setForeground(Color.white);
 			}			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				 btnexit.setBackground(Color.white);
-			     labelExit.setForeground(Color.black);
+				 btnExit.setBackground(Color.white);
+			     exitLabel.setForeground(Color.black);
 			}
 		});
-		btnexit.setLayout(null);
-		btnexit.setBackground(Color.white);
+		btnExit.setLayout(null);
+		btnExit.setBackground(Color.white);
 		
-		labelExit = new JLabel("X");
-		labelExit.setBounds(0, 0, 53, 36);
-		btnexit.add(labelExit);
-		labelExit.setHorizontalAlignment(SwingConstants.CENTER);
-		labelExit.setForeground(SystemColor.black);
-		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
+		exitLabel = new JLabel("X");
+		exitLabel.setBounds(0, 0, 53, 36);
+		btnExit.add(exitLabel);
+		exitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		exitLabel.setForeground(SystemColor.black);
+		exitLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
 
 	}
 
 	private void saveBooking() {
 		if (FormValidationUtility.isGuestFormValid(
-				txtNombre.getText(),
-				txtApellido.getText(),
-				txtFechaN,
-				txtTelefono.getText()
+				nameTxt.getText(),
+				surnameTxt.getText(),
+				birthdateTxt,
+				phoneTxt.getText()
 				)) {
 			this.bookingController.insert(reservasView.getBooking());
 			saveGuest();
@@ -339,14 +342,16 @@ public class RegistroHuesped extends JFrame {
 	}
 
 	private void saveGuest() {
-		Date birthDate = Date.valueOf(DateConvertor.convertDateToLocalDate(txtFechaN.getDate()));
+		Date birthDate = Date.valueOf(DateConvertor.convertDateToLocalDate(birthdateTxt.getDate()));
 		Guest guest = new Guest(
-				txtNombre.getText(),
-				txtApellido.getText(),
+				nameTxt.getText(),
+				surnameTxt.getText(),
 				birthDate,
-				Objects.requireNonNull(txtNacionalidad.getSelectedItem()).toString(),
-				txtTelefono.getText()
+				Objects.requireNonNull(nationalityTxt.getSelectedItem()).toString(),
+				phoneTxt.getText()
 		);
+		this.guestController.insert(guest, reservasView.getBooking().getBookingId());
+		showSaveMessage();
 	}
 
 	private void showSaveMessage() {
@@ -356,8 +361,11 @@ public class RegistroHuesped extends JFrame {
 	}
 
 	private void clearFields() {
-		txtNombre.setText("");
-		txtApellido.setText("");
+		nameTxt.setText("");
+		surnameTxt.setText("");
+		birthdateTxt.setDate(null);
+		nationalityTxt.setSelectedIndex(0);
+		phoneTxt.setText("");
 	}
 	
 	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	

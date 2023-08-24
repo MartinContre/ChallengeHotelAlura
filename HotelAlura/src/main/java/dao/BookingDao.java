@@ -1,9 +1,10 @@
 package dao;
 
 import model.Booking;
-import utilities.ColumnsKey;
 import utilities.InsetFieldGenerator;
-import utilities.JOptionPane.ErrorMessages;
+import utilities.JOptionPane.UserShowMessages;
+import utilities.enums.ColumnsKey;
+import utilities.enums.TableNames;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class BookingDao extends BaseDao<Booking> {
     private static final String INSERT_VALUES = "(?, ?, ?, ?, ?)";
-    private static final Integer UPDATE_VALUES_COUNT = 5;
+    private static final Integer UPDATE_VALUES_COUNT = 6;
     private static final String[] USED_COLUMNS = {
             ColumnsKey.BOOKING_ID.getKey(),
             ColumnsKey.CHECK_IN.getKey(),
@@ -26,12 +27,13 @@ public class BookingDao extends BaseDao<Booking> {
         tableName = "bookings";
     }
 
-    public Integer delete(String  id) {
-        String sql = String.format("DELETE FROM %s WHERE id = ?", tableName);
+    public Integer delete(String id) {
+        String sql = String.format("DELETE FROM %s WHERE %s = ?",
+                tableName, ColumnsKey.BOOKING_ID.getKey());
         try {
-            LOGGER.info(sql + id);
             PreparedStatement statement = connection.prepareStatement(sql);
             statement.setString(1, id);
+            statement.execute();
             return statement.getUpdateCount();
         } catch (SQLException e) {
             String errorMessage = ERROR_SQL_MESSAGE;
@@ -40,25 +42,40 @@ public class BookingDao extends BaseDao<Booking> {
         }
     }
 
+    public Integer[] deleteEmbeddedGuest(String bookingId) {
+        Integer[] deletedRows = new Integer[2];
+        int guestIdToDelete = getGuestIdFromBookingId(bookingId);
+
+        GuestDao guestDao = new GuestDao(connection);
+        deletedRows[1] = guestDao.delete(guestIdToDelete);
+
+        deletedRows[0] = delete(bookingId);
+
+        return deletedRows;
+    }
+
     public List<Booking> list(String bookingId) {
         List<Booking> result = new ArrayList<>();
         String sql = String.format(
-                "SELECT %s %s %s %s %s FORM %s WHERE %s LIKE ?",
+                "SELECT %s, %s, %s, %s, %s, %s FROM %s WHERE %s LIKE ?",
                 ColumnsKey.ID.getKey(),
+                ColumnsKey.BOOKING_ID.getKey(),
                 ColumnsKey.CHECK_IN.getKey(),
                 ColumnsKey.CHECK_OUT.getKey(),
                 ColumnsKey.VALUE.getKey(),
                 ColumnsKey.PAYMENT_METHOD.getKey(),
                 tableName,
-                ColumnsKey.ID.getKey()
-                );
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
-            statement.setString(1, bookingId.concat("%"));
+                ColumnsKey.BOOKING_ID.getKey()
+        );
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, bookingId);
+            System.out.println(statement);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
                 result.add(new Booking(
+                        resultSet.getInt(ColumnsKey.ID.getKey()),
                         resultSet.getString(ColumnsKey.BOOKING_ID.getKey()),
                         resultSet.getDate(ColumnsKey.CHECK_IN.getKey()),
                         resultSet.getDate(ColumnsKey.CHECK_OUT.getKey()),
@@ -69,7 +86,7 @@ public class BookingDao extends BaseDao<Booking> {
             return result;
         } catch (SQLException e) {
             LOGGER.error(ERROR_SQL_MESSAGE + e.getMessage());
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Try again",
                     "Error while retrieving data"
             );
@@ -81,12 +98,13 @@ public class BookingDao extends BaseDao<Booking> {
     protected Booking createModel(ResultSet resultSet) {
         try {
             LOGGER.info("Creating Booking model");
-            String id = resultSet.getString(ColumnsKey.ID.getKey());
+            Integer id = resultSet.getInt(ColumnsKey.ID.getKey());
+            String booking_id = resultSet.getString(ColumnsKey.BOOKING_ID.getKey());
             Date checkIn = resultSet.getDate(ColumnsKey.CHECK_IN.getKey());
             Date checkOut = resultSet.getDate(ColumnsKey.CHECK_OUT.getKey());
             BigDecimal value = resultSet.getBigDecimal(ColumnsKey.VALUE.getKey());
             String payMethod = resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey());
-            return new Booking(id, checkIn, checkOut, value, payMethod);
+            return new Booking(id, booking_id, checkIn, checkOut, value, payMethod);
         } catch (SQLException e) {
             LOGGER.error("Couldn't create booking model " + e.getMessage());
             throw new RuntimeException("Couldn't create booking model " + e);
@@ -144,5 +162,37 @@ public class BookingDao extends BaseDao<Booking> {
     @Override
     protected long getId(Booking booking) {
         return booking.getBookingId().length();
+    }
+
+    private Integer getGuestIdFromBookingId(String bookingId) {
+        String sql = String.format("""
+               SELECT g.%s
+               FROM %s b
+               JOIN %s g ON b.%s = g.%s
+               WHERE b.%s = ?""",
+                ColumnsKey.ID.getKey(),
+                tableName,
+                TableNames.GUESTS.getKey(),
+                ColumnsKey.BOOKING_ID.getKey(),
+                ColumnsKey.BOOKING_ID.getKey(),
+                ColumnsKey.BOOKING_ID.getKey()
+        );
+
+        int guestId = 0;
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setString(1, bookingId);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    guestId = resultSet.getInt(ColumnsKey.ID.getKey());
+                }
+            }
+        } catch (SQLException e) {
+            LOGGER.error(ERROR_SQL_MESSAGE + e.getMessage());
+            throw new RuntimeException(ERROR_SQL_MESSAGE + e);
+        }
+
+        return guestId;
     }
 }

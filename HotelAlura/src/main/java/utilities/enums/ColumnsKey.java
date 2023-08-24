@@ -1,4 +1,4 @@
-package utilities;
+package utilities.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,13 +19,8 @@ public enum ColumnsKey {
     CHECK_IN("check_in"),
     CHECK_OUT("check_out"),
     VALUE("value"),
-    PAYMENT_METHOD("payment_method")
-    ;
+    PAYMENT_METHOD("payment_method");
 
     private final String key;
-
-    /*ColumnsKey(String key) {
-        this.key = key;
-    }*/
 
 }

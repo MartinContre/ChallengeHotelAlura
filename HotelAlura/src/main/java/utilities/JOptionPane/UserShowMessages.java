@@ -1,8 +1,9 @@
 package utilities.JOptionPane;
 
 import javax.swing.*;
+import java.awt.*;
 
-public class ErrorMessages {
+public class UserShowMessages {
 
     public static void showErrorMessage(String title, String msg) {
         JOptionPane.showMessageDialog(
@@ -10,6 +11,13 @@ public class ErrorMessages {
                 msg,
                 title,
                 JOptionPane.ERROR_MESSAGE
+        );
+    }
+
+    public static void showMessage(Component parentComponent, String message) {
+        JOptionPane.showMessageDialog(
+                parentComponent,
+                message
         );
     }
 }

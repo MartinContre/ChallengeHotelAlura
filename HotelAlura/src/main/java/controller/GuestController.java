@@ -3,15 +3,10 @@ package controller;
 import dao.GuestDao;
 import factory.ConnectionFactory;
 import model.Guest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import javax.swing.table.DefaultTableModel;
 import java.util.List;
-import java.util.Map;
 
 public class GuestController {
-    private static final Logger LOGGER = LogManager.getLogger(GuestController.class);
     private final GuestDao guestDao;
     public GuestController() {
         this.guestDao = new GuestDao(ConnectionFactory.getConnection());
@@ -30,12 +25,8 @@ public class GuestController {
         guestDao.insert(guest);
     }
 
-    public Map<String, Integer> delete(Integer guestId, String bookingId) {
-        LOGGER.info("Deleted guest: ");
+    public Integer[] delete(int guestId, String bookingId) {
         return guestDao.deleteEmbeddedBookings(guestId, bookingId);
     }
 
-    public Integer update(Guest guest) {
-        return guestDao.update(guest);
-    }
 }

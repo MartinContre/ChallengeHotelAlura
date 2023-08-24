@@ -6,11 +6,13 @@ import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Booking {
+    private Integer id;
     private String BookingId;
     private Date checkIn;
     private Date checkOut;
@@ -18,9 +20,15 @@ public class Booking {
     private String paymentMethod;
 
     public Booking(Date checkIn, Date checkOut, BigDecimal value, String paymentMethod) {
+        this.BookingId = generateBookingId();
         this.checkIn = checkIn;
         this.checkOut = checkOut;
         this.value = value;
         this.paymentMethod = paymentMethod;
+    }
+
+    public String generateBookingId() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 }

@@ -1,8 +1,7 @@
 package utilities;
 
 import com.toedter.calendar.JDateChooser;
-import model.User;
-import utilities.JOptionPane.ErrorMessages;
+import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
 import java.awt.event.KeyEvent;
@@ -13,38 +12,21 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FormValidationUtility {
-    public static Boolean isUserCorrect(User user, String userName, JPasswordField passwordField) {
-        if (!userName.equals(user.getName())) {
-            ErrorMessages.showErrorMessage(
-                    "Incorrect user",
-                    "The username entered is incorrect."
-            );
-            throw new IllegalArgumentException("Incorrect user");
-        } else if (String.valueOf(passwordField.getPassword()).equals(user.getPassword())) {
-            ErrorMessages.showErrorMessage(
-                    "Incorrect password",
-                    "The password entered is incorrect."
-            );
-            throw new IllegalArgumentException("Incorrect password");
-        } else {
-            return true;
-        }
-    }
     public static Boolean isBookingFormValid(
             JDateChooser checkIn, JDateChooser checkOut,
-            String value,
-            JComboBox<String> paymentMethod
+            String value
     ) {
         if (checkIn.getDate() == null && checkOut.getDate() == null) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid dates",
-                    "Please select check in and check out please.\n" +
-                            "You can write the date if follows the next format:\n" +
-                            "dd/mm/yyyy"
+                    """
+                            Please select check in and check out please.
+                            You can write the date if follows the next format:
+                            dd/mm/yyyy"""
             );
             throw new IllegalArgumentException("Dates not valid");
         } else if (value.equals("0.0")) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Value not valid",
                     "Please select check in and check out."
             );
@@ -56,45 +38,48 @@ public class FormValidationUtility {
     public static Boolean isGuestFormValid(
             String name, String surname, JDateChooser birthdate, String phone
     ) {
-        String regexName = "^(?=.{3,25}$)([A-ZÁÉÍÓÚ][a-záéíóúñ]+(?:[\\s]{1}[A-ZÁÉÍÓÚ][a-záéíóúñ]+)*)$";
-        String regexTel = "^([\\d]{2}[\\-]){4}[\\d]{2}$";
+        String regexName = "^(?=.{3,25}$)([A-ZÁÉÍÓÚ][a-záéíóúñ]+(?:\\s[A-ZÁÉÍÓÚ][a-záéíóúñ]+)*)$";
+        String regexTel = "^(\\d{2}-){4}\\d{2}$";
         Pattern patternName = Pattern.compile(regexName);
         Pattern patternPhone = Pattern.compile(regexTel);
         Matcher matchName = patternName.matcher(name);
         Matcher matchSurname = patternName.matcher(surname);
         Matcher matchPhone = patternPhone.matcher(phone);
         if (!matchName.find()) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid Name",
-                    "1. The name must contain the first capital letter: John\n"
-                            + "2. Likewise if it is a compound name: John Doe\n"
-                            + "3. If it is a single name, check that there are no blank spaces before or after."
+                    """
+                            1. The name must contain the first capital letter: John
+                            2. Likewise if it is a compound name: John Doe
+                            3. If it is a single name, check that there are no blank spaces before or after."""
             );
             throw new IllegalArgumentException("Invalid name");
         } else if (!matchSurname.find()) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid surname.",
-                    "1. The last name must contain the first capital letter: Kings\n"
-                            + "2. Likewise if it is a compound last name: Reyes Hernandez\n"
-                            + "3. If it is a single last name, check that there are no blank spaces before or after."
+                    """
+                            1. The last name must contain the first capital letter: Kings
+                            2. Likewise if it is a compound last name: Reyes Hernandez
+                            3. If it is a single last name, check that there are no blank spaces before or after."""
                     );
             throw new IllegalArgumentException("Invalid surname");
         } else if (birthdate.getDate() == null) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid date.",
                     "Field date is empty.");
             throw new IllegalArgumentException("Invalid date");
         } else if (isOlder(birthdate.getDate())) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid birthdate",
                     "Is underage.");
             throw new IllegalArgumentException("Invalid birthdate");
         } else if (!matchPhone.find()) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "Invalid phone.",
-                    "The supported format must contain 10 digits, \n " +
-                            "including the phone number of the state, separated by dashes(-):\n"
-                            + "55-43-22-22-43"
+                    """
+                            The supported format must contain 10 digits,\s
+                             including the phone number of the state, separated by dashes(-):
+                            55-43-22-22-43"""
             );
             throw new IllegalArgumentException("Invalid phone");
         }
@@ -106,24 +91,28 @@ public class FormValidationUtility {
             JPasswordField passwordField
     ) {
         if (userName.isEmpty()) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "User name not valid",
                     "User field must not be null"
             );
             throw new IllegalArgumentException("User name not valid");
         } else if (userCategory.getSelectedIndex() == 0) {
-            ErrorMessages.showErrorMessage(
+            UserShowMessages.showErrorMessage(
                     "User category not valid.",
                     "Please select an user category"
             );
             throw new IllegalArgumentException("User category not valid");
         } else if (passwordField.getPassword().length == 0) {
-            ErrorMessages.showErrorMessage("Password not valid.",
-                    "Please fill password field.");
+            UserShowMessages.showErrorMessage(
+                    "Password not valid.",
+                    "Please fill password field."
+            );
             throw new IllegalArgumentException("Password not valid");
         } else if (passwordField.getPassword().length > 30) {
-            ErrorMessages.showErrorMessage("Invalid password..",
-                    "Password too long, maximum 30 characters.");
+            UserShowMessages.showErrorMessage(
+                    "Invalid password..",
+                    "Password too long, maximum 30 characters."
+            );
             throw new IllegalArgumentException("Invalid password");
         }
         return true;
@@ -134,6 +123,17 @@ public class FormValidationUtility {
         if (!Character.isDigit(c) && c != '.' && c != '-') {
             keyEvent.consume();
         }
+    }
+
+    public static boolean validateSearchField(JTextField searchField) {
+        if (searchField.getText().isEmpty()) {
+            UserShowMessages.showErrorMessage(
+                    "Search field empty",
+                    "Please fill search field"
+            );
+            throw new IllegalArgumentException("Search field empty");
+        }
+        return true;
     }
 
     private static Boolean isOlder(Date birthDate) {

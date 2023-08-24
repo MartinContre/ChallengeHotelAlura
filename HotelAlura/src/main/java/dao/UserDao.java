@@ -1,7 +1,7 @@
 package dao;
 
 import model.User;
-import utilities.ColumnsKey;
+import utilities.enums.ColumnsKey;
 import utilities.InsetFieldGenerator;
 
 import javax.swing.*;
@@ -27,15 +27,17 @@ public class UserDao extends BaseDao<User> {
     public List<User> list(String userCategory) {
         List<User> result = new ArrayList<>();
         try {
-            String sql = String.format("SELECT \n"
-                    + "%s, %s, %s\n"
-                    + "FROM %s\n"
-                    + "WHERE user_category LIKE ?",
+            String sql = String.format("""
+                            SELECT\s
+                            %s, %s, %s
+                            FROM %s
+                            WHERE %s LIKE ?""",
                     ColumnsKey.ID.getKey(),
                     ColumnsKey.USER_NAME.getKey(),
                     ColumnsKey.USER_CATEGORY.getKey(),
-                    tableName);
-            try ( PreparedStatement preparedStatement = connection.prepareStatement(sql);) {
+                    tableName,
+                    ColumnsKey.USER_CATEGORY.getKey());
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, userCategory.concat("%"));
                 preparedStatement.execute();
                 ResultSet resultSet = preparedStatement.getResultSet();
@@ -101,11 +103,12 @@ public class UserDao extends BaseDao<User> {
     @Override
     protected User createModel(ResultSet resultSet) {
         try {
-            LOGGER.info("Creating model");
+            LOGGER.info("Creating model user");
             Integer id = resultSet.getInt(ColumnsKey.ID.getKey());
             String userName = resultSet.getString(ColumnsKey.USER_NAME.getKey());
             String userCategory = resultSet.getString(ColumnsKey.USER_CATEGORY.getKey());
-            return new User(id, userName, userCategory);
+            String userPassword = resultSet.getString(ColumnsKey.PASSWORD.getKey());
+            return new User(id, userName, userCategory, userPassword);
         } catch (SQLException e) {
             LOGGER.error("Couldn't create model " + e.getMessage());
             throw new RuntimeException("Couldn't create model " + e);

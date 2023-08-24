@@ -2,7 +2,9 @@ package views;
 
 import controller.UserController;
 import model.User;
-import utilities.FormValidationUtility;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -21,11 +23,12 @@ public class Login extends JFrame {
 	 */
 	@Serial
 	private static final long serialVersionUID = 1L;
-	private JTextField txtUsuario;
-	private JPasswordField txtContrasena;
+	private final JTextField userField;
+	private final JPasswordField passwordField;
 	int xMouse, yMouse;
-	private JLabel labelExit;
+	private final JLabel exitLabel;
 
+	private static final Logger LOGGER = LogManager.getLogger(Login.class);
 	private static User user;
 	private final UserController userController;
 
@@ -33,52 +36,62 @@ public class Login extends JFrame {
 	 * Launch the application.
 	 */
 	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Login frame = new Login();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
+		EventQueue.invokeLater(() -> {
+            try {
+                Login frame = new Login();
+                frame.setVisible(true);
+            } catch (Exception e) {
+				LOGGER.error(e.getMessage());
+            }
+        });
 	}
 
-	public User getUser() {
-		if (Login.user == null) {
-			throw new RuntimeException("Must fill fields for user and password");
-		}
-		return Login.user;
-	}
 
 	public void setUser(User user) {
 		Login.user = user;
 	}
 
 	private void clearFields() {
-		txtUsuario.setText("");
-		txtContrasena.setText("");
+		userField.setText("");
+		passwordField.setText("");
 	}
 
 	private void validateUser() {
-		String userName = txtUsuario.getText();
-		String password = String.valueOf(txtContrasena.getPassword());
-		List<User> users = this.userController.list(userName, password);
-
-		if (users.isEmpty()) {
-			JOptionPane.showMessageDialog(
-					null,
-					"User or password incorrect"
-			);
+		if (userField.getText().isEmpty() && String.valueOf(passwordField.getPassword()).isEmpty()) {
+			UserShowMessages.showErrorMessage(
+					"Empty form",
+					"Please field the form");
+			clearFields();
+		} else if (String.valueOf(passwordField.getPassword()).isEmpty()) {
+			UserShowMessages.showErrorMessage(
+					"Password empty",
+					"Please fill password field");
+			clearFields();
+		} else if (userField.getText().isEmpty()) {
+			UserShowMessages.showErrorMessage(
+					"User empty",
+					"Please fill user field");
+			clearFields();
 		} else {
-			users.forEach(this::setUser);
-			if (FormValidationUtility.isUserCorrect(getUser(), userName, txtContrasena)) {
+			String userName = userField.getText();
+			String password = String.valueOf(passwordField.getPassword());
+			List<User> users = this.userController.list(userName, password);
+			if (users.isEmpty()) {
+				JOptionPane.showMessageDialog(
+						null,
+						"User or password incorrect"
+				);
+				clearFields();
+			} else {
+				users.forEach(this::setUser);
 				this.dispose();
-				MenuUsuario menuUsuario = new MenuUsuario();
+				UserMenuView menuUsuario = new UserMenuView();
 				menuUsuario.setVisible(true);
 			}
 		}
+
+
+
 	}
 
 	/**
@@ -114,106 +127,106 @@ public class Login extends JFrame {
 		panel_1.add(imgHotel);
 		imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/img-hotel-login-.png"))));
 		
-		JPanel btnexit = new JPanel();
-		btnexit.setBounds(251, 0, 53, 36);
-		panel_1.add(btnexit);
-		btnexit.addMouseListener(new MouseAdapter() {
+		JPanel exitBtn = new JPanel();
+		exitBtn.setBounds(251, 0, 53, 36);
+		panel_1.add(exitBtn);
+		exitBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				System.exit(0);
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				btnexit.setBackground(Color.red);
-				labelExit.setForeground(Color.white);
+				exitBtn.setBackground(Color.red);
+				exitLabel.setForeground(Color.white);
 			}			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				 btnexit.setBackground(new Color(12, 138, 199));
-			     labelExit.setForeground(Color.white);
+				 exitBtn.setBackground(new Color(12, 138, 199));
+			     exitLabel.setForeground(Color.white);
 			}
 		});
-		btnexit.setBackground(new Color(12, 138, 199));
-		btnexit.setLayout(null);
-		btnexit.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		exitBtn.setBackground(new Color(12, 138, 199));
+		exitBtn.setLayout(null);
+		exitBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
-		labelExit = new JLabel("X");
-		labelExit.setBounds(0, 0, 53, 36);
-		btnexit.add(labelExit);
-		labelExit.setForeground(SystemColor.text);
-		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
-		labelExit.setHorizontalAlignment(SwingConstants.CENTER);		
+		exitLabel = new JLabel("X");
+		exitLabel.setBounds(0, 0, 53, 36);
+		exitBtn.add(exitLabel);
+		exitLabel.setForeground(SystemColor.text);
+		exitLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+		exitLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		
-		txtUsuario = new JTextField();
-		txtUsuario.addMouseListener(new MouseAdapter() {
+		userField = new JTextField();
+		userField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				 if (txtUsuario.getText().equals("Ingrese su nombre de usuario")) {
-					 txtUsuario.setText("");
-					 txtUsuario.setForeground(Color.black);
+				 if (userField.getText().equals("Enter your username")) {
+					 userField.setText("");
+					 userField.setForeground(Color.black);
 			        }
-			        if (String.valueOf(txtContrasena.getPassword()).isEmpty()) {
-			        	txtContrasena.setText("********");
-			        	txtContrasena.setForeground(Color.gray);
+			        if (String.valueOf(passwordField.getPassword()).isEmpty()) {
+			        	passwordField.setText("");
+			        	passwordField.setForeground(Color.gray);
 			        }
 			}
 		});
-		txtUsuario.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtUsuario.setText("Ingrese su nombre de usuario");
-		txtUsuario.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		txtUsuario.setForeground(SystemColor.activeCaptionBorder);
-		txtUsuario.setBounds(65, 256, 324, 32);
-		panel.add(txtUsuario);
-		txtUsuario.setColumns(10);
+		userField.setFont(new Font("Roboto", Font.PLAIN, 16));
+		userField.setText("Enter your username");
+		userField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		userField.setForeground(SystemColor.activeCaptionBorder);
+		userField.setBounds(65, 256, 324, 32);
+		panel.add(userField);
+		userField.setColumns(10);
 		
 		JSeparator separator = new JSeparator();
 		separator.setBackground(new Color(0, 120, 215));
 		separator.setBounds(65, 292, 324, 2);
 		panel.add(separator);
 		
-		JLabel labelTitulo = new JLabel("INICIAR SESIÓN");
-		labelTitulo.setForeground(SystemColor.textHighlight);
-		labelTitulo.setFont(new Font("Roboto Black", Font.PLAIN, 26));
-		labelTitulo.setBounds(65, 149, 202, 26);
-		panel.add(labelTitulo);
+		JLabel titleLabel = new JLabel("LOG IN");
+		titleLabel.setForeground(SystemColor.textHighlight);
+		titleLabel.setFont(new Font("Roboto Black", Font.PLAIN, 26));
+		titleLabel.setBounds(65, 149, 202, 26);
+		panel.add(titleLabel);
 		
 		JSeparator separator_1 = new JSeparator();
 		separator_1.setBackground(SystemColor.textHighlight);
 		separator_1.setBounds(65, 393, 324, 2);
 		panel.add(separator_1);
 		
-		txtContrasena = new JPasswordField();
-		txtContrasena.setText("********");
-		txtContrasena.addMouseListener(new MouseAdapter() {
+		passwordField = new JPasswordField();
+		passwordField.setText("********");
+		passwordField.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if (String.valueOf(txtContrasena.getPassword()).equals("********")) {
-					txtContrasena.setText("");
-					txtContrasena.setForeground(Color.black);
+				if (String.valueOf(passwordField.getPassword()).equals("********")) {
+					passwordField.setText("");
+					passwordField.setForeground(Color.black);
 		        }
-		        if (txtUsuario.getText().isEmpty()) {
-		        	txtUsuario.setText("Ingrese su nombre de usuario");
-		        	txtUsuario.setForeground(Color.gray);
+		        if (userField.getText().isEmpty()) {
+		        	userField.setText("");
+		        	userField.setForeground(Color.gray);
 		        }
 			}
 		});
-		txtContrasena.setForeground(SystemColor.activeCaptionBorder);
-		txtContrasena.setFont(new Font("Roboto", Font.PLAIN, 16));
-		txtContrasena.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-		txtContrasena.setBounds(65, 353, 324, 32);
-		panel.add(txtContrasena);
+		passwordField.setForeground(SystemColor.activeCaptionBorder);
+		passwordField.setFont(new Font("Roboto", Font.PLAIN, 16));
+		passwordField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+		passwordField.setBounds(65, 353, 324, 32);
+		panel.add(passwordField);
 		
-		JLabel LabelUsuario = new JLabel("USUARIO");
-		LabelUsuario.setForeground(SystemColor.textInactiveText);
-		LabelUsuario.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-		LabelUsuario.setBounds(65, 219, 107, 26);
-		panel.add(LabelUsuario);
+		JLabel userLabel = new JLabel("USER");
+		userLabel.setForeground(SystemColor.textInactiveText);
+		userLabel.setFont(new Font("Roboto Black", Font.PLAIN, 20));
+		userLabel.setBounds(65, 219, 107, 26);
+		panel.add(userLabel);
 		
-		JLabel lblContrasea = new JLabel("CONTRASEÑA");
-		lblContrasea.setForeground(SystemColor.textInactiveText);
-		lblContrasea.setFont(new Font("Roboto Black", Font.PLAIN, 20));
-		lblContrasea.setBounds(65, 316, 140, 26);
-		panel.add(lblContrasea);
+		JLabel passwordLabel = new JLabel("PASSWORD");
+		passwordLabel.setForeground(SystemColor.textInactiveText);
+		passwordLabel.setFont(new Font("Roboto Black", Font.PLAIN, 20));
+		passwordLabel.setBounds(65, 316, 140, 26);
+		panel.add(passwordLabel);
 		
 		JPanel btnLogin = new JPanel();
 		btnLogin.addMouseListener(new MouseAdapter() {
@@ -221,13 +234,13 @@ public class Login extends JFrame {
 			public void mouseEntered(MouseEvent e) {
 				btnLogin.setBackground(new Color(0, 156, 223));
 			}
-		
 			@Override
 			public void mouseExited(MouseEvent e) {
 				btnLogin.setBackground(SystemColor.textHighlight);
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				e.consume();
 				validateUser();
 			}
 		});
@@ -237,7 +250,7 @@ public class Login extends JFrame {
 		btnLogin.setLayout(null);
 		btnLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
-		JLabel lblNewLabel = new JLabel("ENTRAR");
+		JLabel lblNewLabel = new JLabel("CONTINUE");
 		lblNewLabel.setBounds(0, 0, 122, 44);
 		btnLogin.add(lblNewLabel);
 		lblNewLabel.setForeground(SystemColor.controlLtHighlight);
@@ -273,7 +286,7 @@ public class Login extends JFrame {
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();
-	    }//GEN-LAST:event_headerMousePressed
+	    }
 
 	    private void headerMouseDragged(MouseEvent evt) {
 	        int x = evt.getXOnScreen();

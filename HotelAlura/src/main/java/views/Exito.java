@@ -1,24 +1,17 @@
 package views;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
+import java.awt.*;
+import java.util.Objects;
 
-@SuppressWarnings("serial")
+
 public class Exito extends JDialog {
 
+	private static final Logger LOGGER = LogManager.getLogger(Exito.class);
 	private final JPanel contentPanel = new JPanel();
 
 	/**
@@ -30,7 +23,7 @@ public class Exito extends JDialog {
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 	}
 
@@ -48,7 +41,7 @@ public class Exito extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("");
-			lblNewLabel.setIcon(new ImageIcon(Exito.class.getResource("/images/Ha-100px.png")));
+			lblNewLabel.setIcon(new ImageIcon(Objects.requireNonNull(Exito.class.getResource("/images/Ha-100px.png"))));
 			lblNewLabel.setBounds(123, 11, 100, 100);
 			contentPanel.add(lblNewLabel);
 		}
@@ -65,13 +58,11 @@ public class Exito extends JDialog {
 			getContentPane().add(buttonPane, BorderLayout.SOUTH);
 			{
 				JButton okButton = new JButton("OK");
-				okButton.addActionListener(new ActionListener() {
-					public void actionPerformed(ActionEvent e) {
-						dispose();//sirve para cerrar la ventana actual
-						MenuUsuario usuario = new MenuUsuario(); 
-						usuario.setVisible(true);
-					}
-				});
+				okButton.addActionListener(e -> {
+                    dispose();
+                    UserMenuView usuario = new UserMenuView();
+                    usuario.setVisible(true);
+                });
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);
 				getRootPane().setDefaultButton(okButton);

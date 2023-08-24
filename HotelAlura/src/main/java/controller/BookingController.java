@@ -26,6 +26,10 @@ public class BookingController {
         bookingDao.insert(booking);
     }
 
+    public Integer[] deleteEmbeddedGuest(String bookingId) {
+        return bookingDao.deleteEmbeddedGuest(bookingId);
+    }
+
     public Integer update(Booking booking) {
         return bookingDao.update(booking);
     }

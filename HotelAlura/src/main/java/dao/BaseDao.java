@@ -4,10 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 
@@ -59,16 +56,17 @@ public abstract class BaseDao<T> {
      */
     public void insert(T model) {
         validateObject(model);
-        System.out.println("problem");
         String sql = String.format("INSERT INTO %s %s VALUES %s", tableName, getInsertFields(), getInsertValues());
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             LOGGER.info("Inserting object to table: " + tableName);
             statement.clearParameters();
             setInsertStatementValues(statement, model);
-            statement.executeUpdate();
-            try (ResultSet resultSet= statement.getGeneratedKeys()){
-                while (resultSet.next()) {
-                    LOGGER.info(String.format("Inserted %s into database", model.getClass()));
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows > 0) {
+                try (ResultSet resultSet = statement.getGeneratedKeys()) {
+                    while (resultSet.next()) {
+                        LOGGER.info(String.format("Inserted %s into database with generated key: %d", model.getClass(), resultSet.getLong(1)));
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -106,10 +104,10 @@ public abstract class BaseDao<T> {
      */
     public Integer delete(long id) {
         String sql = String.format("DELETE FROM %s WHERE id = ?", tableName);
-        try {
-            LOGGER.info(sql + id);
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)){
+            LOGGER.info("Deleted user");
             statement.setLong(1, id);
+            statement.executeUpdate();
             return statement.getUpdateCount();
         } catch (SQLException e) {
             String errorMessage = ERROR_SQL_MESSAGE;

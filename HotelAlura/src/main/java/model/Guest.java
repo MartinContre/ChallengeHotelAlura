@@ -25,4 +25,5 @@ public class Guest {
         this.nationality = nationality;
         this.phone = phone;
     }
+
 }
