@@ -9,23 +9,23 @@ import utilities.enums.EmployeeCategory;
 public class User {
     private Integer id;
     private String name;
-    private String category;
+    private EmployeeCategory category;
     private String password;
 
-    public User(Integer id, String name, String category) {
+    public User(Integer id, String name, EmployeeCategory category) {
         this.id = id;
         this.name = name;
         this.category = category;
     }
 
-    public User(String name, String category) {
+    public User(String name, EmployeeCategory category) {
         this.name = name;
         this.category = category;
     }
 
     public User(String name, EmployeeCategory category, String password) {
         this.name = name;
-        this.category = category.toString();
+        this.category = category;
         this.password = password;
     }
 }

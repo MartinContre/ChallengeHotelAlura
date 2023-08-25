@@ -100,7 +100,7 @@ public abstract class BaseDao<T> {
      * Deletes an object from the database table by its ID.
      *
      * @param id The ID of the object to delete.
-     * @return
+     * @return Integer number of deleted items
      */
     public Integer delete(long id) {
         String sql = String.format("DELETE FROM %s WHERE id = ?", tableName);

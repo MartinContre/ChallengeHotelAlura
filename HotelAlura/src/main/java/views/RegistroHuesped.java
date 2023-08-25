@@ -13,10 +13,10 @@ import model.Guest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utilities.DateConvertor;
-import utilities.FormValidationUtility;
+import utilities.validation.FormValidationUtility;
+import utilities.enums.Nationality;
 
 import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
 import java.awt.Font;
 import javax.swing.ImageIcon;
@@ -25,7 +25,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.sql.Date;
-import java.text.Format;
 import java.awt.Toolkit;
 import java.util.Objects;
 import javax.swing.SwingConstants;
@@ -40,7 +39,7 @@ public class RegistroHuesped extends JFrame {
 	private final JTextField phoneTxt;
 	private final JTextField bookingIdText;
 	private final JDateChooser birthdateTxt;
-	private final JComboBox<Format> nationalityTxt;
+	private final JComboBox<String> nationalityTxt;
 	private final JLabel exitLabel;
 	private final JLabel backLabel;
 	int xMouse, yMouse;
@@ -156,12 +155,11 @@ public class RegistroHuesped extends JFrame {
 		birthdateTxt.getCalendarButton().setBackground(SystemColor.textHighlight);
 		birthdateTxt.setDateFormatString("yyyy-MM-dd");
 		contentPane.add(birthdateTxt);
-		
-		nationalityTxt = new JComboBox<>();
+
+		nationalityTxt = new JComboBox<>(Nationality.getAllDisplayNames());
 		nationalityTxt.setBounds(560, 350, 289, 36);
 		nationalityTxt.setBackground(SystemColor.text);
 		nationalityTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
-		nationalityTxt.setModel(new DefaultComboBoxModel(new String[] {"afgano-afgana", "alemán-", "alemana", "árabe-árabe", "argentino-argentina", "australiano-australiana", "belga-belga", "boliviano-boliviana", "brasileño-brasileña", "camboyano-camboyana", "canadiense-canadiense", "chileno-chilena", "chino-china", "colombiano-colombiana", "coreano-coreana", "costarricense-costarricense", "cubano-cubana", "danés-danesa", "ecuatoriano-ecuatoriana", "egipcio-egipcia", "salvadoreño-salvadoreña", "escocés-escocesa", "español-española", "estadounidense-estadounidense", "estonio-estonia", "etiope-etiope", "filipino-filipina", "finlandés-finlandesa", "francés-francesa", "galés-galesa", "griego-griega", "guatemalteco-guatemalteca", "haitiano-haitiana", "holandés-holandesa", "hondureño-hondureña", "indonés-indonesa", "inglés-inglesa", "iraquí-iraquí", "iraní-iraní", "irlandés-irlandesa", "israelí-israelí", "italiano-italiana", "japonés-japonesa", "jordano-jordana", "laosiano-laosiana", "letón-letona", "letonés-letonesa", "malayo-malaya", "marroquí-marroquí", "mexicano-mexicana", "nicaragüense-nicaragüense", "noruego-noruega", "neozelandés-neozelandesa", "panameño-panameña", "paraguayo-paraguaya", "peruano-peruana", "polaco-polaca", "portugués-portuguesa", "puertorriqueño-puertorriqueño", "dominicano-dominicana", "rumano-rumana", "ruso-rusa", "sueco-sueca", "suizo-suiza", "tailandés-tailandesa", "taiwanes-taiwanesa", "turco-turca", "ucraniano-ucraniana", "uruguayo-uruguaya", "venezolano-venezolana", "vietnamita-vietnamita"}));
 		contentPane.add(nationalityTxt);
 		
 		JLabel lblNombre = new JLabel("NOMBRE");
@@ -368,7 +366,6 @@ public class RegistroHuesped extends JFrame {
 		phoneTxt.setText("");
 	}
 	
-	//Código que permite mover la ventana por la pantalla según la posición de "x" y "y"	
 	 private void headerMousePressed(MouseEvent evt) {
 	        xMouse = evt.getX();
 	        yMouse = evt.getY();

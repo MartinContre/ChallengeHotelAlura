@@ -1,4 +1,4 @@
-package utilities;
+package utilities.tables;
 
 import model.Booking;
 import model.Guest;
@@ -7,8 +7,11 @@ import model.User;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
-public abstract class FillTablesUtility {
+public class FillTablesUtility {
 
+    private FillTablesUtility() {
+
+    }
     public static void fillBookingTable(List<Booking> bookingList, DefaultTableModel tableModel) {
         bookingList.forEach(booking ->
                 tableModel.addRow(

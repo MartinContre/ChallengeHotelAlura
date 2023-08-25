@@ -5,7 +5,9 @@ import model.Booking;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utilities.DateConvertor;
-import utilities.FormValidationUtility;
+import utilities.StringUtilities;
+import utilities.enums.PaymentMethods;
+import utilities.validation.FormValidationUtility;
 import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
@@ -278,7 +280,7 @@ public class ReservasView extends JFrame {
 		paymentMethodTxt.setBackground(SystemColor.text);
 		paymentMethodTxt.setBorder(new LineBorder(new Color(255, 255, 255), 1, true));
 		paymentMethodTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
-		paymentMethodTxt.setModel(new DefaultComboBoxModel<>(new String[] {"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
+		paymentMethodTxt.setModel(new JComboBox<>(PaymentMethods.getAllPaymentMethods()).getModel());
 		panel.add(paymentMethodTxt);
 
 		JPanel nextBtn = new JPanel();
@@ -324,8 +326,8 @@ public class ReservasView extends JFrame {
 					dateCheckIn,
 					dateCheckOut,
 					valueBookingToBigDecimal,
-					Objects.requireNonNull(paymentMethodTxt.getSelectedItem()).toString()
-			));
+                    StringUtilities.convertPaymentMethodStrToPaymentMethod(Objects.requireNonNull(paymentMethodTxt.getSelectedItem()).toString())
+            ));
 			clearFields();
 			this.dispose();
 			RegistroHuesped guestRegister = new RegistroHuesped();

@@ -3,17 +3,21 @@ package views;
 import controller.BookingController;
 import controller.GuestController;
 import controller.UserController;
-import model.User;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import utilities.FillTablesUtility;
-import utilities.FormValidationUtility;
 import utilities.JOptionPane.UserShowMessages;
+import utilities.columns.CopyableCellEditor;
+import utilities.enums.EmployeeCategory;
 import utilities.enums.TablesColumns;
+import utilities.tables.DeleteRowsFromTable;
+import utilities.tables.LoadTableUtility;
+import utilities.tables.UpdateDBFromRow;
+import utilities.validation.FormValidationUtility;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -36,6 +40,7 @@ public class Busqueda extends JFrame {
     private final DefaultTableModel tableModelUsers;
     private final JLabel backLabel;
     private final JLabel labelExit;
+
     int xMouse, yMouse;
 
     /**
@@ -98,6 +103,12 @@ public class Busqueda extends JFrame {
         panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/reservado.png"))), scroll_tableBooking, null);
         scroll_tableBooking.setVisible(true);
 
+        TableColumn bookingIdColumnBooking = bookingTable.getColumnModel().getColumn(1);
+        bookingIdColumnBooking.setCellEditor(new CopyableCellEditor());
+
+        TableColumn idColumnBooking = bookingTable.getColumnModel().getColumn(0);
+        idColumnBooking.setCellEditor(new CopyableCellEditor());
+
         guestTable = new JTable();
         guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         guestTable.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -113,6 +124,12 @@ public class Busqueda extends JFrame {
         panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/pessoas.png"))), scroll_tableGuests, null);
         scroll_tableGuests.setVisible(true);
 
+        TableColumn bookingIdColumnGuest = guestTable.getColumnModel().getColumn(6);
+        bookingIdColumnGuest.setCellEditor(new CopyableCellEditor());
+
+        TableColumn idColumnGuest = guestTable.getColumnModel().getColumn(0);
+        idColumnGuest.setCellEditor(new CopyableCellEditor());
+
         userTable = new JTable();
         userTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         userTable.setFont(new Font("Roboto", Font.PLAIN, 16));
@@ -125,6 +142,8 @@ public class Busqueda extends JFrame {
         panel.addTab("Users", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/employee.png"))), scroll_tableUsers, null);
         scroll_tableUsers.setVisible(true);
 
+        TableColumn idColumnUser = userTable.getColumnModel().getColumn(0);
+        idColumnUser.setCellEditor(new CopyableCellEditor());
 
         JLabel lblNewLabel_2 = new JLabel("");
         lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/Ha-100px.png"))));
@@ -315,43 +334,35 @@ public class Busqueda extends JFrame {
     }
 
     private void loadGuestTable() {
-        tableModelGuest.getDataVector().clear();
-        FillTablesUtility.fillGuestTable(this.guestController.list(), tableModelGuest);
+        LoadTableUtility.guestTable(tableModelGuest, this.guestController);
         clearSearchTxt();
     }
 
     private void loadGuestTable(JTextField searchField) {
-        tableModelGuest.getDataVector().clear();
-        String surname = searchField.getText();
-        FillTablesUtility.fillGuestTable(this.guestController.list(surname), tableModelGuest);
-        clearSearchTxt();
+        LoadTableUtility.guestTable(tableModelGuest, this.guestController, searchField);
     }
 
     private void loadBookingTable() {
-        tableModelBooking.getDataVector().clear();
-        FillTablesUtility.fillBookingTable(this.bookingController.list(), tableModelBooking);
+        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController);
         clearSearchTxt();
     }
 
     private void loadBookingTable(JTextField searchField) {
-        tableModelBooking.getDataVector().clear();
-        String bookingId = searchField.getText();
-        FillTablesUtility.fillBookingTable(this.bookingController.list(bookingId), tableModelBooking);
-        clearSearchTxt();
+        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, searchField);
     }
 
     private void loadUserTable() {
-        tableModelUsers.getDataVector().clear();
-        FillTablesUtility.fillUserTable(this.userController.list(), tableModelUsers);
+        LoadTableUtility.userTable(tableModelUsers, this.userController, userTable);
         clearSearchTxt();
-        userTable.repaint();
     }
 
     private void loadUserTable(JTextField searchTxt) {
-        tableModelUsers.getDataVector().clear();
-        String userCategory = searchTxt.getText();
-        FillTablesUtility.fillUserTable(this.userController.list(userCategory), tableModelUsers);
-        clearSearchTxt();
+        LoadTableUtility.userTable(
+                tableModelUsers,
+                this.userController,
+                userTable,
+                searchTxt
+        );
     }
 
     private void clearSearchTxt() {
@@ -367,20 +378,7 @@ public class Busqueda extends JFrame {
         int selectedRow = guestTable.getSelectedRow();
 
         if (selectedRow != -1) {
-            int guestId = Integer.parseInt(tableModelGuest.getValueAt(guestTable.getSelectedRow(), 0).toString());
-            String bookingId = tableModelGuest.getValueAt(guestTable.getSelectedRow(), 6).toString();
-
-            tableModelGuest.removeRow(guestTable.getSelectedRow());
-
-            Integer[] deletedRows = this.guestController.delete(guestId, bookingId);
-
-            UserShowMessages.showMessage(
-                    this,
-                    String.format("%d Guest deleted\n" +
-                            "%d Booking deleted",
-                            deletedRows[0], deletedRows[1]
-                    )
-            );
+            DeleteRowsFromTable.deleteGuest(tableModelGuest, guestTable, this.guestController);
         } else {
             UserShowMessages.showErrorMessage(
                     "Row not selected",
@@ -393,19 +391,7 @@ public class Busqueda extends JFrame {
         int selectedRow = bookingTable.getSelectedRow();
 
         if (selectedRow != -1) {
-            String bookingId = tableModelBooking.getValueAt(bookingTable.getSelectedRow(), 1).toString();
-
-            Integer[] deletedRows = this.bookingController.deleteEmbeddedGuest(bookingId);
-
-            tableModelBooking.removeRow(bookingTable.getSelectedRow());
-
-            UserShowMessages.showMessage(
-                    this,
-                    String.format("%d Booking deleted\n" +
-                            "%d Guest deleted",
-                            deletedRows[0], deletedRows[1]
-                    )
-            );
+            DeleteRowsFromTable.deleteBooking(tableModelBooking, bookingTable, this.bookingController);
         } else {
             UserShowMessages.showErrorMessage(
                     "Row not selected",
@@ -418,15 +404,7 @@ public class Busqueda extends JFrame {
         int selectedRow = userTable.getSelectedRow();
 
         if (selectedRow != -1) {
-            int id = Integer.parseInt(tableModelUsers.getValueAt(userTable.getSelectedRow(), 0).toString());
-            int deletedRows = this.userController.delete(id);
-
-            tableModelUsers.removeRow(userTable.getSelectedRow());
-
-            UserShowMessages.showMessage(
-                    this,
-                    String.format("%d Item successfully deleted", deletedRows)
-            );
+            DeleteRowsFromTable.deleteUser(tableModelUsers, userTable, this.userController);
         } else {
             UserShowMessages.showErrorMessage(
                     "Row not selected",
@@ -447,21 +425,8 @@ public class Busqueda extends JFrame {
         int selectedRow = userTable.getSelectedRow();
 
         if (selectedRow != -1) {
-            int id = Integer.parseInt(tableModelUsers.getValueAt(userTable.getSelectedRow(), 0).toString());
-            String userName = tableModelUsers.getValueAt(userTable.getSelectedRow(), 1).toString();
-            String userCategory = tableModelUsers.getValueAt(userTable.getSelectedRow(), 2).toString();
-            String userPassword = tableModelUsers.getValueAt(userTable.getSelectedRow(), 3).toString();
-
-            User user = new User(id, userName, userCategory, userPassword);
-
-            int userUpdateCount = this.userController.update(user);
-
-            UserShowMessages.showMessage(
-                    this,
-                    String.format(
-                            "%s User update", userUpdateCount
-                    )
-            );
+            UpdateDBFromRow.updateUser(tableModelUsers, userTable, this.userController);
+            loadUserTable();
 
         } else {
             UserShowMessages.showErrorMessage(

@@ -3,7 +3,9 @@ package dao;
 import model.Booking;
 import utilities.InsetFieldGenerator;
 import utilities.JOptionPane.UserShowMessages;
+import utilities.StringUtilities;
 import utilities.enums.ColumnsKey;
+import utilities.enums.PaymentMethods;
 import utilities.enums.TableNames;
 
 import java.math.BigDecimal;
@@ -68,7 +70,7 @@ public class BookingDao extends BaseDao<Booking> {
                 ColumnsKey.BOOKING_ID.getKey()
         );
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, bookingId);
+            statement.setString(1, bookingId.concat("%"));
             System.out.println(statement);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
@@ -80,7 +82,7 @@ public class BookingDao extends BaseDao<Booking> {
                         resultSet.getDate(ColumnsKey.CHECK_IN.getKey()),
                         resultSet.getDate(ColumnsKey.CHECK_OUT.getKey()),
                         resultSet.getBigDecimal(ColumnsKey.VALUE.getKey()),
-                        resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey())
+                        StringUtilities.convertPaymentMethodStrToPaymentMethod(resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey()))
                 ));
             }
             return result;
@@ -103,7 +105,7 @@ public class BookingDao extends BaseDao<Booking> {
             Date checkIn = resultSet.getDate(ColumnsKey.CHECK_IN.getKey());
             Date checkOut = resultSet.getDate(ColumnsKey.CHECK_OUT.getKey());
             BigDecimal value = resultSet.getBigDecimal(ColumnsKey.VALUE.getKey());
-            String payMethod = resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey());
+            PaymentMethods payMethod = StringUtilities.convertPaymentMethodStrToPaymentMethod(resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey()));
             return new Booking(id, booking_id, checkIn, checkOut, value, payMethod);
         } catch (SQLException e) {
             LOGGER.error("Couldn't create booking model " + e.getMessage());
@@ -129,7 +131,7 @@ public class BookingDao extends BaseDao<Booking> {
             statement.setDate(2, (Date) booking.getCheckIn());
             statement.setDate(3, (Date) booking.getCheckOut());
             statement.setBigDecimal(4, booking.getValue());
-            statement.setString(5, booking.getPaymentMethod());
+            statement.setString(5, booking.getPaymentMethod().getMethod());
         } catch (SQLException e) {
             LOGGER.error("Couldn't set statement values: " + e.getMessage());
         }
@@ -148,7 +150,7 @@ public class BookingDao extends BaseDao<Booking> {
             statement.setDate(2, (Date) booking.getCheckIn());
             statement.setDate(3, (Date) booking.getCheckOut());
             statement.setBigDecimal(4, booking.getValue());
-            statement.setString(5, booking.getPaymentMethod());
+            statement.setString(5, booking.getPaymentMethod().getMethod());
         } catch (SQLException e) {
             LOGGER.error("Couldn't sut update statements values: " + e.getMessage());
         }

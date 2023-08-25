@@ -2,8 +2,8 @@ package factory;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import utilities.JsonReader;
-import utilities.JsonReaderUtils;
+import utilities.json.JsonReader;
+import utilities.json.JsonReaderUtils;
 import views.MenuPrincipal;
 
 import javax.swing.*;

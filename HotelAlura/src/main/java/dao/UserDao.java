@@ -1,8 +1,10 @@
 package dao;
 
 import model.User;
+import utilities.StringUtilities;
 import utilities.enums.ColumnsKey;
 import utilities.InsetFieldGenerator;
+import utilities.enums.EmployeeCategory;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -24,7 +26,7 @@ public class UserDao extends BaseDao<User> {
         this.connection = connection;
     }
 
-    public List<User> list(String userCategory) {
+    public List<User>  list(String userCategory) {
         List<User> result = new ArrayList<>();
         try {
             String sql = String.format("""
@@ -45,7 +47,7 @@ public class UserDao extends BaseDao<User> {
                     User row = new User(
                             resultSet.getInt(ColumnsKey.ID.getKey()),
                             resultSet.getString(ColumnsKey.USER_NAME.getKey()),
-                            resultSet.getString(ColumnsKey.USER_CATEGORY.getKey())
+                            StringUtilities.convertUserCategoryStrToEmployeeCategory(resultSet.getString(ColumnsKey.USER_CATEGORY.getKey()))
                     );
                     result.add(row);
                 }
@@ -82,7 +84,7 @@ public class UserDao extends BaseDao<User> {
                 while (resultSet.next()) {
                     User row = new User(
                             resultSet.getString(ColumnsKey.USER_NAME.getKey()),
-                            resultSet.getString(ColumnsKey.USER_CATEGORY.getKey())
+                            StringUtilities.convertUserCategoryStrToEmployeeCategory(resultSet.getString(ColumnsKey.USER_CATEGORY.getKey()))
                     );
                     result.add(row);
                 }
@@ -106,7 +108,8 @@ public class UserDao extends BaseDao<User> {
             LOGGER.info("Creating model user");
             Integer id = resultSet.getInt(ColumnsKey.ID.getKey());
             String userName = resultSet.getString(ColumnsKey.USER_NAME.getKey());
-            String userCategory = resultSet.getString(ColumnsKey.USER_CATEGORY.getKey());
+            String userCategoryStr = resultSet.getString(ColumnsKey.USER_CATEGORY.getKey());
+            EmployeeCategory userCategory = StringUtilities.convertUserCategoryStrToEmployeeCategory(userCategoryStr);
             String userPassword = resultSet.getString(ColumnsKey.PASSWORD.getKey());
             return new User(id, userName, userCategory, userPassword);
         } catch (SQLException e) {
@@ -130,7 +133,7 @@ public class UserDao extends BaseDao<User> {
         try {
             LOGGER.info("Setting insert statement values for guest model");
             statement.setString(1, user.getName());
-            statement.setString(2, user.getCategory());
+            statement.setString(2, user.getCategory().toString());
             statement.setString(3, user.getPassword());
         } catch (SQLException e) {
             LOGGER.error("Couldn't set statement values: " + e.getMessage());
@@ -147,7 +150,7 @@ public class UserDao extends BaseDao<User> {
         try {
             LOGGER.info("Setting insert statement values for guest model");
             statement.setString(1, user.getName());
-            statement.setString(2, user.getCategory());
+            statement.setString(2, user.getCategory().toString());
             statement.setString(3, user.getPassword());
         } catch (SQLException e) {
             LOGGER.error("Couldn't set statement values: " + e.getMessage());

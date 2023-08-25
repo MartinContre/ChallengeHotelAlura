@@ -1,4 +1,4 @@
-package utilities;
+package utilities.json;
 
 import java.util.HashMap;
 import java.util.Map;
