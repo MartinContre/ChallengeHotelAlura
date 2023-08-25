@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum PaymentMethods {
+public enum PaymentMethod {
     CREDIT("Tarjeta de Crédito"),
     DEBIT("Tarjeta de Débito"),
     CASH("Dinero en efectivo");

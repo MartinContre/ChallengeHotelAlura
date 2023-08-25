@@ -2,7 +2,7 @@ package utilities;
 
 import utilities.JOptionPane.UserShowMessages;
 import utilities.enums.EmployeeCategory;
-import utilities.enums.PaymentMethods;
+import utilities.enums.PaymentMethod;
 
 public class StringUtilities {
     private StringUtilities() {
@@ -24,18 +24,18 @@ public class StringUtilities {
         }
     }
 
-    public static PaymentMethods  convertPaymentMethodStrToPaymentMethod(String paymentMethodStr) {
+    public static PaymentMethod convertPaymentMethodStrToPaymentMethod(String paymentMethodStr) {
         paymentMethodStr = paymentMethodStr.trim().toUpperCase();
-        if (paymentMethodStr.equals(PaymentMethods.CREDIT.getMethod().toUpperCase())) {
-            return PaymentMethods.CREDIT;
-        } else if (paymentMethodStr.equals(PaymentMethods.DEBIT.getMethod().toUpperCase())) {
-            return PaymentMethods.DEBIT;
-        } else if (paymentMethodStr.equals(PaymentMethods.CASH.getMethod().toUpperCase())) {
-            return PaymentMethods.CASH;
+        if (paymentMethodStr.equals(PaymentMethod.CREDIT.getMethod().toUpperCase())) {
+            return PaymentMethod.CREDIT;
+        } else if (paymentMethodStr.equals(PaymentMethod.DEBIT.getMethod().toUpperCase())) {
+            return PaymentMethod.DEBIT;
+        } else if (paymentMethodStr.equals(PaymentMethod.CASH.getMethod().toUpperCase())) {
+            return PaymentMethod.CASH;
         } else {
             UserShowMessages.showErrorMessage(
                     "Error in payment method",
-                    String.format("Error typing payment method, should be %s", (Object) PaymentMethods.getAllPaymentMethods())
+                    String.format("Error typing payment method, should be %s", (Object) PaymentMethod.getAllPaymentMethods())
             );
             throw new IllegalArgumentException();
         }

@@ -3,7 +3,7 @@ package model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import utilities.enums.PaymentMethods;
+import utilities.enums.PaymentMethod;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -18,9 +18,9 @@ public class Booking {
     private Date checkIn;
     private Date checkOut;
     private BigDecimal value;
-    private PaymentMethods paymentMethod;
+    private PaymentMethod paymentMethod;
 
-    public Booking(Date checkIn, Date checkOut, BigDecimal value, PaymentMethods paymentMethod) {
+    public Booking(Date checkIn, Date checkOut, BigDecimal value, PaymentMethod paymentMethod) {
         this.BookingId = generateBookingId();
         this.checkIn = checkIn;
         this.checkOut = checkOut;

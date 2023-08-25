@@ -6,7 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utilities.DateConvertor;
 import utilities.StringUtilities;
-import utilities.enums.PaymentMethods;
+import utilities.enums.PaymentMethod;
 import utilities.validation.FormValidationUtility;
 import utilities.JOptionPane.UserShowMessages;
 
@@ -280,7 +280,7 @@ public class ReservasView extends JFrame {
 		paymentMethodTxt.setBackground(SystemColor.text);
 		paymentMethodTxt.setBorder(new LineBorder(new Color(255, 255, 255), 1, true));
 		paymentMethodTxt.setFont(new Font("Roboto", Font.PLAIN, 16));
-		paymentMethodTxt.setModel(new JComboBox<>(PaymentMethods.getAllPaymentMethods()).getModel());
+		paymentMethodTxt.setModel(new JComboBox<>(PaymentMethod.getAllPaymentMethods()).getModel());
 		panel.add(paymentMethodTxt);
 
 		JPanel nextBtn = new JPanel();

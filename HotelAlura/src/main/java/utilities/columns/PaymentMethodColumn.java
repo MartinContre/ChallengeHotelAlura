@@ -1,26 +1,26 @@
 package utilities.columns;
 
-import utilities.enums.EmployeeCategory;
+import utilities.enums.PaymentMethod;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class EmployeeCategoryColum extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
+public class PaymentMethodColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
-    private final JComboBox<EmployeeCategory> comboBox;
-    private EmployeeCategory selectedCategory;
+    private final JComboBox<PaymentMethod> comboBox;
+    private PaymentMethod selectedPaymentMethod;
 
-    public EmployeeCategoryColum() {
-        comboBox = new JComboBox<>(EmployeeCategory.values());
+    public PaymentMethodColumn() {
+        comboBox = new JComboBox<>(PaymentMethod.values());
         comboBox.addActionListener(e -> stopCellEditing());
     }
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        selectedCategory = (EmployeeCategory) value;
-        comboBox.setSelectedItem(selectedCategory);
+        selectedPaymentMethod = (PaymentMethod) value;
+        comboBox.setSelectedItem(selectedPaymentMethod);
         return comboBox;
     }
 
@@ -31,8 +31,8 @@ public class EmployeeCategoryColum extends AbstractCellEditor implements TableCe
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        selectedCategory = (EmployeeCategory) value;
-        comboBox.setSelectedItem(selectedCategory);
+        selectedPaymentMethod = (PaymentMethod) value;
+        comboBox.setSelectedItem(selectedPaymentMethod);
         return comboBox;
     }
 }

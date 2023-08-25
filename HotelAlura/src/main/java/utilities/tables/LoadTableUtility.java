@@ -7,6 +7,7 @@ import model.Booking;
 import model.Guest;
 import utilities.columns.EmployeeCategoryColum;
 import utilities.JOptionPane.UserShowMessages;
+import utilities.columns.PaymentMethodColumn;
 import utilities.validation.TxtValidation;
 
 import javax.swing.*;
@@ -38,12 +39,14 @@ public class LoadTableUtility {
         }
     }
 
-    public static void bookingTable(DefaultTableModel tableModel, BookingController controller) {
+    public static void bookingTable(DefaultTableModel tableModel, BookingController controller, JTable table) {
         tableModel.getDataVector().clear();
         FillTablesUtility.fillBookingTable(controller.list(), tableModel);
+
+        paymentMethodColumn(table);
     }
 
-    public static void bookingTable(DefaultTableModel tableModel, BookingController controller, JTextField search) {
+    public static void bookingTable(DefaultTableModel tableModel, BookingController controller, JTable table, JTextField search) {
         tableModel.getDataVector().clear();
         String bookingId = search.getText();
 
@@ -57,6 +60,7 @@ public class LoadTableUtility {
             );
         } else {
             FillTablesUtility.fillBookingTable(bookingList, tableModel);
+            paymentMethodColumn(table);
         }
     }
 
@@ -72,10 +76,17 @@ public class LoadTableUtility {
     public static void userTable(DefaultTableModel tableModel, UserController controller, JTable jTable, JTextField search) {
         tableModel.getDataVector().clear();
         String userCategory = search.getText();
+
         if (TxtValidation.validateEmployeeCategory(userCategory)) {
             FillTablesUtility.fillUserTable(controller.list(userCategory), tableModel);
             userCategoryColumn(jTable);
         }
+    }
+
+    private static void paymentMethodColumn(JTable jTable) {
+        TableColumn paymentMethodColumn = jTable.getColumnModel().getColumn(5);
+        paymentMethodColumn.setCellRenderer(new PaymentMethodColumn());
+        paymentMethodColumn.setCellEditor(new PaymentMethodColumn());
     }
 
     private static void userCategoryColumn(JTable jTable) {

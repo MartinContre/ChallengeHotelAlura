@@ -5,7 +5,7 @@ import utilities.InsetFieldGenerator;
 import utilities.JOptionPane.UserShowMessages;
 import utilities.StringUtilities;
 import utilities.enums.ColumnsKey;
-import utilities.enums.PaymentMethods;
+import utilities.enums.PaymentMethod;
 import utilities.enums.TableNames;
 
 import java.math.BigDecimal;
@@ -71,7 +71,6 @@ public class BookingDao extends BaseDao<Booking> {
         );
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, bookingId.concat("%"));
-            System.out.println(statement);
             statement.execute();
             ResultSet resultSet = statement.getResultSet();
 
@@ -105,7 +104,7 @@ public class BookingDao extends BaseDao<Booking> {
             Date checkIn = resultSet.getDate(ColumnsKey.CHECK_IN.getKey());
             Date checkOut = resultSet.getDate(ColumnsKey.CHECK_OUT.getKey());
             BigDecimal value = resultSet.getBigDecimal(ColumnsKey.VALUE.getKey());
-            PaymentMethods payMethod = StringUtilities.convertPaymentMethodStrToPaymentMethod(resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey()));
+            PaymentMethod payMethod = StringUtilities.convertPaymentMethodStrToPaymentMethod(resultSet.getString(ColumnsKey.PAYMENT_METHOD.getKey()));
             return new Booking(id, booking_id, checkIn, checkOut, value, payMethod);
         } catch (SQLException e) {
             LOGGER.error("Couldn't create booking model " + e.getMessage());
@@ -163,7 +162,7 @@ public class BookingDao extends BaseDao<Booking> {
 
     @Override
     protected long getId(Booking booking) {
-        return booking.getBookingId().length();
+        return booking.getId();
     }
 
     private Integer getGuestIdFromBookingId(String bookingId) {

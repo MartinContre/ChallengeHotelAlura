@@ -7,7 +7,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utilities.JOptionPane.UserShowMessages;
 import utilities.columns.CopyableCellEditor;
-import utilities.enums.EmployeeCategory;
 import utilities.enums.TablesColumns;
 import utilities.tables.DeleteRowsFromTable;
 import utilities.tables.LoadTableUtility;
@@ -343,12 +342,12 @@ public class Busqueda extends JFrame {
     }
 
     private void loadBookingTable() {
-        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController);
+        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, bookingTable);
         clearSearchTxt();
     }
 
     private void loadBookingTable(JTextField searchField) {
-        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, searchField);
+        LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, bookingTable, searchField);
     }
 
     private void loadUserTable() {
@@ -414,11 +413,33 @@ public class Busqueda extends JFrame {
     }
 
     private void updateBooking() {
+        int selectedRow = bookingTable.getSelectedRow();
 
+        if (selectedRow != -1) {
+            UpdateDBFromRow.updateBooking(tableModelBooking, bookingTable, this.bookingController);
+            loadBookingTable();
+
+        } else {
+            UserShowMessages.showErrorMessage(
+                    "Row not selected",
+                    "Please select a row to be deleted"
+            );
+        }
     }
 
     private void updateGuest() {
+        int selectedRow = guestTable.getSelectedRow();
 
+        if (selectedRow != -1) {
+            UpdateDBFromRow.updateGuest(tableModelGuest, guestTable, this.guestController);
+            loadGuestTable();
+
+        } else {
+            UserShowMessages.showErrorMessage(
+                    "Row not selected",
+                    "Please select a row to be deleted"
+            );
+        }
     }
 
     private void updateUser() {
