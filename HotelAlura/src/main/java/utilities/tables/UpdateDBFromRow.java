@@ -6,9 +6,12 @@ import controller.UserController;
 import model.Booking;
 import model.Guest;
 import model.User;
+import utilities.CalculateValue;
 import utilities.JOptionPane.UserShowMessages;
 import utilities.enums.EmployeeCategory;
 import utilities.enums.PaymentMethod;
+import utilities.validation.SQLDataValidator;
+import utilities.validation.TxtValidation;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -25,9 +28,14 @@ public class UpdateDBFromRow {
         int id = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
         String guestName = tableModel.getValueAt(table.getSelectedRow(), 1).toString();
         String surname = tableModel.getValueAt(table.getSelectedRow(), 2).toString();
-        Date birthdate = Date.valueOf(tableModel.getValueAt(table.getSelectedRow(), 3).toString());
+        String birthdateStr = tableModel.getValueAt(table.getSelectedRow(), 3).toString();
+
+        Date birthdate = SQLDataValidator.isBirthdateValid(birthdateStr);
         String nationality = tableModel.getValueAt(table.getSelectedRow(), 4).toString();
-        String phone = tableModel.getValueAt(table.getSelectedRow(), 5).toString();
+        String phoneStr = tableModel.getValueAt(table.getSelectedRow(), 5).toString();
+
+        String phone = TxtValidation.getValidPhoneNumber(phoneStr);
+
         String bookingId = tableModel.getValueAt(table.getSelectedRow(), 6).toString();
 
         Guest guest = new Guest(
@@ -40,15 +48,24 @@ public class UpdateDBFromRow {
                 bookingId
         );
 
-        System.out.println(guest);
+        int guestUpdateCount = controller.update(guest);
+
+        UserShowMessages.showMessage(
+                null,
+                String.format(
+                        "%s User update", guestUpdateCount
+                )
+        );
     }
 
     public static void updateBooking(DefaultTableModel tableModel, JTable table, BookingController controller) {
         int id = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
         String bookingId = tableModel.getValueAt(table.getSelectedRow(), 1).toString();
-        Date checkIn = Date.valueOf(tableModel.getValueAt(table.getSelectedRow(), 2).toString());
-        Date checkOut = Date.valueOf(tableModel.getValueAt(table.getSelectedRow(), 3).toString());
-        BigDecimal value = new BigDecimal(tableModel.getValueAt(table.getSelectedRow(), 4).toString());
+        String strDateCheckIn = tableModel.getValueAt(table.getSelectedRow(), 2).toString();
+        Date checkIn = SQLDataValidator.isCheckInValid(strDateCheckIn);
+        String strDateCheckOut = tableModel.getValueAt(table.getSelectedRow(), 3).toString();
+        Date checkOut = SQLDataValidator.isCheckOutValid(strDateCheckOut, checkIn);
+        BigDecimal value = CalculateValue.getBookingValue(checkIn, checkOut);
         String paymentMethodStr = tableModel.getValueAt(table.getSelectedRow(), 5).toString();
         PaymentMethod paymentMethod = PaymentMethod.valueOf(paymentMethodStr);
 
@@ -59,7 +76,7 @@ public class UpdateDBFromRow {
         UserShowMessages.showMessage(
                 null,
                 String.format(
-                        "%s User update", bookingUpdateCount
+                        "%s Booking update", bookingUpdateCount
                 )
         );
     }

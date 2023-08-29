@@ -6,6 +6,7 @@ import utilities.enums.EmployeeCategory;
 @Data
 @ToString(exclude = "password")
 @AllArgsConstructor
+@NoArgsConstructor
 public class User {
     private Integer id;
     private String name;

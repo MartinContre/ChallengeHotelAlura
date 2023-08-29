@@ -29,4 +29,7 @@ public class GuestController {
         return guestDao.deleteEmbeddedBookings(guestId, bookingId);
     }
 
+    public Integer update(Guest guest) {
+        return guestDao.update(guest);
+    }
 }

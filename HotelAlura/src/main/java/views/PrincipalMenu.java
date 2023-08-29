@@ -20,8 +20,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
 
-public class MenuPrincipal extends JFrame {
-	private static final Logger LOGGER = LogManager.getLogger(MenuPrincipal.class);
+public class PrincipalMenu extends JFrame {
+	private static final Logger LOGGER = LogManager.getLogger(PrincipalMenu.class);
 
 	private final JLabel labelExit;
 	int xMouse, yMouse;
@@ -32,7 +32,7 @@ public class MenuPrincipal extends JFrame {
 	public static void main(String[] args) {
 		EventQueue.invokeLater(() -> {
             try {
-                MenuPrincipal frame = new MenuPrincipal();
+                PrincipalMenu frame = new PrincipalMenu();
                 frame.setVisible(true);
             } catch (Exception e) {
 				LOGGER.error(e.getMessage());
@@ -43,8 +43,8 @@ public class MenuPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuPrincipal() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/images/aH-40px.png")));
+	public PrincipalMenu() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(PrincipalMenu.class.getResource("/images/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 910, 537);
 		JPanel contentPane = new JPanel();
@@ -64,12 +64,12 @@ public class MenuPrincipal extends JFrame {
 		
 		JLabel backGroundImage = new JLabel("");
 		backGroundImage.setBounds(-50, 0, 732, 501);
-		backGroundImage.setIcon(new ImageIcon(Objects.requireNonNull(MenuPrincipal.class.getResource("/images/menu-img.png"))));
+		backGroundImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/menu-img.png"))));
 		panel.add(backGroundImage);
 		
 		JLabel logo = new JLabel("");
 		logo.setBounds(722, 80, 150, 156);
-		logo.setIcon(new ImageIcon(Objects.requireNonNull(MenuPrincipal.class.getResource("/images/aH-150px.png"))));
+		logo.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/aH-150px.png"))));
 		panel.add(logo);
 		
 		JPanel panel_1 = new JPanel();
@@ -131,7 +131,7 @@ public class MenuPrincipal extends JFrame {
 		loginImage.setBounds(0, 0, 80, 70);
 		btnLogin.add(loginImage);
 		loginImage.setHorizontalAlignment(SwingConstants.CENTER);
-		loginImage.setIcon(new ImageIcon(Objects.requireNonNull(MenuPrincipal.class.getResource("/images/login.png"))));
+		loginImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/login.png"))));
 		
 		JLabel titleLabel = new JLabel("LOGIN");
 		titleLabel.setBounds(754, 265, 83, 24);

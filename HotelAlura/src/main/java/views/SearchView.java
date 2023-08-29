@@ -3,8 +3,6 @@ package views;
 import controller.BookingController;
 import controller.GuestController;
 import controller.UserController;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import utilities.JOptionPane.UserShowMessages;
 import utilities.columns.CopyableCellEditor;
 import utilities.enums.TablesColumns;
@@ -23,13 +21,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
 
-public class Busqueda extends JFrame {
+public class SearchView extends JFrame {
 
-    private final static Logger LOGGER = LogManager.getLogger(Busqueda.class);
     private final GuestController guestController;
     private final BookingController bookingController;
     private final UserController userController;
-    private final JPanel contentPane;
     private final JTextField searchTxt;
     private final JTable guestTable;
     private final JTable bookingTable;
@@ -45,15 +41,15 @@ public class Busqueda extends JFrame {
     /**
      * Create the frame.
      */
-    public Busqueda() {
+    public SearchView() {
         this.guestController = new GuestController();
         this.bookingController = new BookingController();
         this.userController = new UserController();
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(Busqueda.class.getResource("/images/lupa2.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(SearchView.class.getResource("/images/lupa2.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 571);
-        contentPane = new JPanel();
+        JPanel contentPane = new JPanel();
         contentPane.setBackground(Color.WHITE);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
@@ -99,14 +95,17 @@ public class Busqueda extends JFrame {
         tableModelBooking.addColumn(TablesColumns.VALUE.getKey());
         tableModelBooking.addColumn(TablesColumns.PAYMENT_METHOD.getKey());
         JScrollPane scroll_tableBooking = new JScrollPane(bookingTable);
-        panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/reservado.png"))), scroll_tableBooking, null);
+        panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/reservado.png"))), scroll_tableBooking, null);
         scroll_tableBooking.setVisible(true);
+
+        TableColumn idColumnBooking = bookingTable.getColumnModel().getColumn(0);
+        idColumnBooking.setCellEditor(new CopyableCellEditor());
 
         TableColumn bookingIdColumnBooking = bookingTable.getColumnModel().getColumn(1);
         bookingIdColumnBooking.setCellEditor(new CopyableCellEditor());
 
-        TableColumn idColumnBooking = bookingTable.getColumnModel().getColumn(0);
-        idColumnBooking.setCellEditor(new CopyableCellEditor());
+        TableColumn valueColumnBooking = bookingTable.getColumnModel().getColumn(4);
+        valueColumnBooking.setCellEditor(new CopyableCellEditor());
 
         guestTable = new JTable();
         guestTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -120,7 +119,7 @@ public class Busqueda extends JFrame {
         tableModelGuest.addColumn(TablesColumns.PHONE.getKey());
         tableModelGuest.addColumn(TablesColumns.BOOKING_ID.getKey());
         JScrollPane scroll_tableGuests = new JScrollPane(guestTable);
-        panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/pessoas.png"))), scroll_tableGuests, null);
+        panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/pessoas.png"))), scroll_tableGuests, null);
         scroll_tableGuests.setVisible(true);
 
         TableColumn bookingIdColumnGuest = guestTable.getColumnModel().getColumn(6);
@@ -138,59 +137,21 @@ public class Busqueda extends JFrame {
         tableModelUsers.addColumn(TablesColumns.USER_CATEGORY.getKey());
         tableModelUsers.addColumn(TablesColumns.USER_PASSWORD.getKey());
         JScrollPane scroll_tableUsers = new JScrollPane(userTable);
-        panel.addTab("Users", new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/employee.png"))), scroll_tableUsers, null);
+        panel.addTab("Users", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/employee.png"))), scroll_tableUsers, null);
         scroll_tableUsers.setVisible(true);
 
         TableColumn idColumnUser = userTable.getColumnModel().getColumn(0);
         idColumnUser.setCellEditor(new CopyableCellEditor());
 
         JLabel lblNewLabel_2 = new JLabel("");
-        lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(Busqueda.class.getResource("/images/Ha-100px.png"))));
+        lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/Ha-100px.png"))));
         lblNewLabel_2.setBounds(56, 51, 104, 107);
         contentPane.add(lblNewLabel_2);
 
-        JPanel header = new JPanel();
-        header.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                headerMouseDragged(e);
-            }
-        });
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                headerMousePressed(e);
-            }
-        });
-        header.setLayout(null);
-        header.setBackground(Color.WHITE);
-        header.setBounds(0, 0, 910, 36);
+        JPanel header = getjPanel();
         contentPane.add(header);
 
-        JPanel backBtn = new JPanel();
-        backBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                UserMenuView usuario = new UserMenuView();
-                usuario.setVisible(true);
-                dispose();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                backBtn.setBackground(new Color(12, 138, 199));
-                backLabel.setForeground(Color.white);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                backBtn.setBackground(Color.white);
-                backLabel.setForeground(Color.black);
-            }
-        });
-        backBtn.setLayout(null);
-        backBtn.setBackground(Color.WHITE);
-        backBtn.setBounds(0, 0, 53, 36);
+        JPanel backBtn = getPanel();
         header.add(backBtn);
 
         backLabel = new JLabel("<");
@@ -199,6 +160,55 @@ public class Busqueda extends JFrame {
         backLabel.setBounds(0, 0, 53, 36);
         backBtn.add(backLabel);
 
+        JPanel exitBtn = getExitBtn();
+        header.add(exitBtn);
+
+        labelExit = new JLabel("X");
+        labelExit.setHorizontalAlignment(SwingConstants.CENTER);
+        labelExit.setForeground(Color.BLACK);
+        labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
+        labelExit.setBounds(0, 0, 53, 36);
+        exitBtn.add(labelExit);
+
+        JSeparator separator_1_2 = new JSeparator();
+        separator_1_2.setForeground(new Color(12, 138, 199));
+        separator_1_2.setBackground(new Color(12, 138, 199));
+        separator_1_2.setBounds(539, 159, 193, 2);
+        contentPane.add(separator_1_2);
+
+        JPanel searchBtn = getjPanel(panel);
+        contentPane.add(searchBtn);
+
+        JLabel searchLabel = new JLabel("SEARCH");
+        searchLabel.setBounds(0, 0, 122, 35);
+        searchBtn.add(searchLabel);
+        searchLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        searchLabel.setForeground(Color.WHITE);
+        searchLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+
+        JPanel editBtn = getPanel(panel);
+        contentPane.add(editBtn);
+
+        JLabel editLabel = new JLabel("EDIT");
+        editLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        editLabel.setForeground(Color.WHITE);
+        editLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+        editLabel.setBounds(0, 0, 122, 35);
+        editBtn.add(editLabel);
+
+        JPanel deleteBtn = getDeleteBtn(panel);
+        contentPane.add(deleteBtn);
+
+        JLabel deleteLabel = new JLabel("DELETE");
+        deleteLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        deleteLabel.setForeground(Color.WHITE);
+        deleteLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+        deleteLabel.setBounds(0, 0, 122, 35);
+        deleteBtn.add(deleteLabel);
+        setResizable(false);
+    }
+
+    private JPanel getExitBtn() {
         JPanel exitBtn = new JPanel();
         exitBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -223,21 +233,78 @@ public class Busqueda extends JFrame {
         exitBtn.setLayout(null);
         exitBtn.setBackground(Color.WHITE);
         exitBtn.setBounds(857, 0, 53, 36);
-        header.add(exitBtn);
+        return exitBtn;
+    }
 
-        labelExit = new JLabel("X");
-        labelExit.setHorizontalAlignment(SwingConstants.CENTER);
-        labelExit.setForeground(Color.BLACK);
-        labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
-        labelExit.setBounds(0, 0, 53, 36);
-        exitBtn.add(labelExit);
+    private JPanel getPanel() {
+        JPanel backBtn = new JPanel();
+        backBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                UserMenuView userMenuView = new UserMenuView();
+                userMenuView.setVisible(true);
+                dispose();
+            }
 
-        JSeparator separator_1_2 = new JSeparator();
-        separator_1_2.setForeground(new Color(12, 138, 199));
-        separator_1_2.setBackground(new Color(12, 138, 199));
-        separator_1_2.setBounds(539, 159, 193, 2);
-        contentPane.add(separator_1_2);
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                backBtn.setBackground(new Color(12, 138, 199));
+                backLabel.setForeground(Color.white);
+            }
 
+            @Override
+            public void mouseExited(MouseEvent e) {
+                backBtn.setBackground(Color.white);
+                backLabel.setForeground(Color.black);
+            }
+        });
+        backBtn.setLayout(null);
+        backBtn.setBackground(Color.WHITE);
+        backBtn.setBounds(0, 0, 53, 36);
+        return backBtn;
+    }
+
+    private JPanel getDeleteBtn(JTabbedPane panel) {
+        JPanel deleteBtn = new JPanel();
+        deleteBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedIndex = panel.getSelectedIndex();
+                switch (selectedIndex) {
+                    case 0 -> deleteBooking();
+                    case 1 -> deleteGuest();
+                    case 2 -> deleteUser();
+                }
+            }
+        });
+        deleteBtn.setLayout(null);
+        deleteBtn.setBackground(new Color(12, 138, 199));
+        deleteBtn.setBounds(767, 508, 122, 35);
+        deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return deleteBtn;
+    }
+
+    private JPanel getPanel(JTabbedPane panel) {
+        JPanel editBtn = new JPanel();
+        editBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int selectedIndex = panel.getSelectedIndex();
+                switch (selectedIndex) {
+                    case 0 -> updateBooking();
+                    case 1 -> updateGuest();
+                    case 2 -> updateUser();
+                }
+            }
+        });
+        editBtn.setLayout(null);
+        editBtn.setBackground(new Color(12, 138, 199));
+        editBtn.setBounds(635, 508, 122, 35);
+        editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return editBtn;
+    }
+
+    private JPanel getjPanel(JTabbedPane panel) {
         JPanel searchBtn = new JPanel();
         searchBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -256,81 +323,30 @@ public class Busqueda extends JFrame {
         searchBtn.setLayout(null);
         searchBtn.setBackground(new Color(12, 138, 199));
         searchBtn.setBounds(748, 125, 122, 35);
-        searchBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        contentPane.add(searchBtn);
-
-        JLabel searchLabel = new JLabel("SEARCH");
-        searchLabel.setBounds(0, 0, 122, 35);
-        searchBtn.add(searchLabel);
-        searchLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        searchLabel.setForeground(Color.WHITE);
-        searchLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
-
-        JPanel editBtn = new JPanel();
-        editBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedIndex = panel.getSelectedIndex();
-                switch (selectedIndex) {
-                    case 0 -> updateBooking();
-                    case 1 -> updateGuest();
-                    case 2 -> updateUser();
-                }
-            }
-        });
-        editBtn.setLayout(null);
-        editBtn.setBackground(new Color(12, 138, 199));
-        editBtn.setBounds(635, 508, 122, 35);
-        editBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        contentPane.add(editBtn);
-
-        JLabel editLabel = new JLabel("EDIT");
-        editLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        editLabel.setForeground(Color.WHITE);
-        editLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
-        editLabel.setBounds(0, 0, 122, 35);
-        editBtn.add(editLabel);
-
-        JPanel deleteBtn = new JPanel();
-        deleteBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                int selectedIndex = panel.getSelectedIndex();
-                switch (selectedIndex) {
-                    case 0 -> deleteBooking();
-                    case 1 -> deleteGuest();
-                    case 2 -> deleteUser();
-                }
-            }
-        });
-        deleteBtn.setLayout(null);
-        deleteBtn.setBackground(new Color(12, 138, 199));
-        deleteBtn.setBounds(767, 508, 122, 35);
-        deleteBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        contentPane.add(deleteBtn);
-
-        JLabel deleteLabel = new JLabel("DELETE");
-        deleteLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        deleteLabel.setForeground(Color.WHITE);
-        deleteLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
-        deleteLabel.setBounds(0, 0, 122, 35);
-        deleteBtn.add(deleteLabel);
-        setResizable(false);
+        searchBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return searchBtn;
     }
 
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                Busqueda frame = new Busqueda();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
+    private JPanel getjPanel() {
+        JPanel header = new JPanel();
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                headerMouseDragged(e);
             }
         });
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                headerMousePressed(e);
+            }
+        });
+        header.setLayout(null);
+        header.setBackground(Color.WHITE);
+        header.setBounds(0, 0, 910, 36);
+        return header;
     }
+
 
     private void loadGuestTable() {
         LoadTableUtility.guestTable(tableModelGuest, this.guestController);

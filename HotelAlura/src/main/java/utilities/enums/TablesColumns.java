@@ -25,4 +25,4 @@ public enum TablesColumns {
 
     private final String key;
 
-    }
+}

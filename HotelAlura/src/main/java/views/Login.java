@@ -2,8 +2,6 @@ package views;
 
 import controller.UserController;
 import model.User;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
@@ -27,24 +25,9 @@ public class Login extends JFrame {
 	private final JPasswordField passwordField;
 	int xMouse, yMouse;
 	private final JLabel exitLabel;
-
-	private static final Logger LOGGER = LogManager.getLogger(Login.class);
 	private static User user;
 	private final UserController userController;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-            try {
-                Login frame = new Login();
-                frame.setVisible(true);
-            } catch (Exception e) {
-				LOGGER.error(e.getMessage());
-            }
-        });
-	}
 
 
 	public void setUser(User user) {
@@ -85,8 +68,8 @@ public class Login extends JFrame {
 			} else {
 				users.forEach(this::setUser);
 				this.dispose();
-				UserMenuView menuUsuario = new UserMenuView();
-				menuUsuario.setVisible(true);
+				UserMenuView userMenuView = new UserMenuView();
+				userMenuView.setVisible(true);
 			}
 		}
 

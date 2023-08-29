@@ -2,13 +2,12 @@ package views;
 
 import com.toedter.calendar.JDateChooser;
 import model.Booking;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import utilities.CalculateValue;
 import utilities.DateConvertor;
+import utilities.JOptionPane.UserShowMessages;
 import utilities.StringUtilities;
 import utilities.enums.PaymentMethod;
 import utilities.validation.FormValidationUtility;
-import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -18,17 +17,14 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 
-public class ReservasView extends JFrame {
+public class BookingsView extends JFrame {
 
-	private final static Logger LOGGER = LogManager.getLogger(ReservasView.class);
-	private final JPanel contentPane;
 	public static JTextField valueTxt;
 	public static JDateChooser checkInTxt;
 	public static JDateChooser checkOutTxt;
@@ -40,30 +36,16 @@ public class ReservasView extends JFrame {
 
 
 	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-            try {
-                ReservasView frame = new ReservasView();
-                frame.setVisible(true);
-            } catch (Exception e) {
-				LOGGER.error(e.getMessage());
-            }
-        });
-	}
-
-	/**
 	 * Create the frame.
 	 */
-	public ReservasView() {
+	public BookingsView() {
 
 		super("Reserva");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ReservasView.class.getResource("/images/aH-40px.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(BookingsView.class.getResource("/images/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 560);
 		setResizable(false);
-		contentPane = new JPanel();
+		JPanel contentPane = new JPanel();
 		contentPane.setBackground(SystemColor.control);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -81,8 +63,7 @@ public class ReservasView extends JFrame {
 		contentPane.add(panel);
 		panel.setLayout(null);
 		
-		// Código que crea los elementos de la interfáz gráfica
-		
+
 		JSeparator separator_1_2 = new JSeparator();
 		separator_1_2.setForeground(SystemColor.textHighlight);
 		separator_1_2.setBounds(68, 195, 289, 2);
@@ -113,17 +94,17 @@ public class ReservasView extends JFrame {
 		lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 18));
 		panel.add(lblCheckOut);
 		
-		JLabel lblFormaPago = new JLabel("FORMA DE PAGO");
-		lblFormaPago.setForeground(SystemColor.textInactiveText);
-		lblFormaPago.setBounds(68, 382, 187, 24);
-		lblFormaPago.setFont(new Font("Roboto Black", Font.PLAIN, 18));
-		panel.add(lblFormaPago);
+		JLabel paymentMethodLabel = new JLabel("FORMA DE PAGO");
+		paymentMethodLabel.setForeground(SystemColor.textInactiveText);
+		paymentMethodLabel.setBounds(68, 382, 187, 24);
+		paymentMethodLabel.setFont(new Font("Roboto Black", Font.PLAIN, 18));
+		panel.add(paymentMethodLabel);
 		
-		JLabel lblTitulo = new JLabel("SISTEMA DE RESERVAS");
-		lblTitulo.setBounds(109, 60, 219, 42);
-		lblTitulo.setForeground(new Color(12, 138, 199));
-		lblTitulo.setFont(new Font("Roboto", Font.BOLD, 20));
-		panel.add(lblTitulo);
+		JLabel titleLabel = new JLabel("SISTEMA DE RESERVAS");
+		titleLabel.setBounds(109, 60, 219, 42);
+		titleLabel.setForeground(new Color(12, 138, 199));
+		titleLabel.setFont(new Font("Roboto", Font.BOLD, 20));
+		panel.add(titleLabel);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(428, 0, 482, 560);
@@ -134,13 +115,13 @@ public class ReservasView extends JFrame {
 		JLabel logo = new JLabel("");
 		logo.setBounds(197, 68, 104, 107);
 		panel_1.add(logo);
-		logo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/Ha-100px.png"))));
+		logo.setIcon(new ImageIcon(Objects.requireNonNull(BookingsView.class.getResource("/images/Ha-100px.png"))));
 		
-		JLabel imagenFondo = new JLabel("");
-		imagenFondo.setBounds(0, 140, 500, 409);
-		panel_1.add(imagenFondo);
-		imagenFondo.setBackground(Color.WHITE);
-		imagenFondo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/reservas-img-3.png"))));
+		JLabel backgroundImage = new JLabel("");
+		backgroundImage.setBounds(0, 140, 500, 409);
+		panel_1.add(backgroundImage);
+		backgroundImage.setBackground(Color.WHITE);
+		backgroundImage.setIcon(new ImageIcon(Objects.requireNonNull(BookingsView.class.getResource("/images/reservas-img-3.png"))));
 		
 		JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
 		lblValor.setForeground(SystemColor.textInactiveText);
@@ -153,29 +134,8 @@ public class ReservasView extends JFrame {
 		separator_1.setBounds(68, 362, 289, 2);
 		separator_1.setBackground(SystemColor.textHighlight);
 		panel.add(separator_1);
-												
-		JPanel exitBtn = new JPanel();
-		exitBtn.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				JFrame principal = new MenuPrincipal();
-				principal.setVisible(true);
-				dispose();
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				exitBtn.setBackground(Color.red);
-				exitLabel.setForeground(Color.white);
-			}			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				 exitBtn.setBackground(new Color(12, 138, 199));
-			     exitLabel.setForeground(Color.white);
-			}
-		});
-		exitBtn.setLayout(null);
-		exitBtn.setBackground(new Color(12, 138, 199));
-		exitBtn.setBounds(429, 0, 53, 36);
+
+		JPanel exitBtn = getjPanel();
 		panel_1.add(exitBtn);
 		
 		exitLabel = new JLabel("X");
@@ -203,42 +163,20 @@ public class ReservasView extends JFrame {
 		header.setLayout(null);
 		header.setBackground(Color.WHITE);
 		panel.add(header);
-		
-		JPanel btnAtras = new JPanel();
-		btnAtras.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				UserMenuView usuario = new UserMenuView();
-				usuario.setVisible(true);
-				dispose();				
-			}
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				btnAtras.setBackground(new Color(12, 138, 199));
-				backLabel.setForeground(Color.white);
-			}			
-			@Override
-			public void mouseExited(MouseEvent e) {
-				 btnAtras.setBackground(Color.white);
-			     backLabel.setForeground(Color.black);
-			}
-		});
-		btnAtras.setLayout(null);
-		btnAtras.setBackground(Color.WHITE);
-		btnAtras.setBounds(0, 0, 53, 36);
-		header.add(btnAtras);
+
+		JPanel backBtn = getPanel();
+		header.add(backBtn);
 		
 		backLabel = new JLabel("<");
 		backLabel.setBounds(0, 0, 53, 36);
-		btnAtras.add(backLabel);
+		backBtn.add(backLabel);
 		backLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		backLabel.setFont(new Font("Roboto", Font.PLAIN, 23));
 		
 		
-		//Campos que guardaremos en la base de datos
 		checkInTxt = new JDateChooser();
 		checkInTxt.getCalendarButton().setBackground(SystemColor.textHighlight);
-		checkInTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/icon-reservas.png"))));
+		checkInTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(BookingsView.class.getResource("/images/icon-reservas.png"))));
 		checkInTxt.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 12));
 		checkInTxt.setBounds(68, 161, 289, 35);
 		checkInTxt.getCalendarButton().setBounds(268, 0, 21, 33);
@@ -249,7 +187,7 @@ public class ReservasView extends JFrame {
 		panel.add(checkInTxt);
 
 		checkOutTxt = new JDateChooser();
-		checkOutTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/images/icon-reservas.png"))));
+		checkOutTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(BookingsView.class.getResource("/images/icon-reservas.png"))));
 		checkOutTxt.getCalendarButton().setFont(new Font("Roboto", Font.PLAIN, 11));
 		checkOutTxt.setBounds(68, 246, 289, 35);
 		checkOutTxt.getCalendarButton().setBounds(267, 1, 21, 31);
@@ -296,23 +234,75 @@ public class ReservasView extends JFrame {
 		panel.add(nextBtn);
 		nextBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        JLabel lblSiguiente = new JLabel("SIGUIENTE");
-		lblSiguiente.setHorizontalAlignment(SwingConstants.CENTER);
-		lblSiguiente.setForeground(Color.WHITE);
-		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
-		lblSiguiente.setBounds(0, 0, 122, 35);
-		nextBtn.add(lblSiguiente);
+        JLabel nextLabel = new JLabel("SIGUIENTE");
+		nextLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nextLabel.setForeground(Color.WHITE);
+		nextLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+		nextLabel.setBounds(0, 0, 122, 35);
+		nextBtn.add(nextLabel);
+	}
+
+	private JPanel getPanel() {
+		JPanel backBtn = new JPanel();
+		backBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				UserMenuView userMenuView = new UserMenuView();
+				userMenuView.setVisible(true);
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				backBtn.setBackground(new Color(12, 138, 199));
+				backLabel.setForeground(Color.white);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				 backBtn.setBackground(Color.white);
+			     backLabel.setForeground(Color.black);
+			}
+		});
+		backBtn.setLayout(null);
+		backBtn.setBackground(Color.WHITE);
+		backBtn.setBounds(0, 0, 53, 36);
+		return backBtn;
+	}
+
+	private JPanel getjPanel() {
+		JPanel exitBtn = new JPanel();
+		exitBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				JFrame principalMenu = new PrincipalMenu();
+				principalMenu.setVisible(true);
+				dispose();
+			}
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				exitBtn.setBackground(Color.red);
+				exitLabel.setForeground(Color.white);
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				 exitBtn.setBackground(new Color(12, 138, 199));
+			     exitLabel.setForeground(Color.white);
+			}
+		});
+		exitBtn.setLayout(null);
+		exitBtn.setBackground(new Color(12, 138, 199));
+		exitBtn.setBounds(429, 0, 53, 36);
+		return exitBtn;
 	}
 
 	public Booking getBooking() {
-		if (ReservasView.booking == null) {
+		if (BookingsView.booking == null) {
 			throw new RuntimeException("Empty form, please fill");
 		}
-		return ReservasView.booking;
+		return BookingsView.booking;
 	}
 
 	public void setBooking(Booking booking) {
-		ReservasView.booking = booking;
+		BookingsView.booking = booking;
 	}
 
 	public void saveBookingReference() {
@@ -330,7 +320,7 @@ public class ReservasView extends JFrame {
             ));
 			clearFields();
 			this.dispose();
-			RegistroHuesped guestRegister = new RegistroHuesped();
+			GuestRegisterView guestRegister = new GuestRegisterView();
 			guestRegister.setVisible(true);
 		}
 	}
@@ -343,8 +333,6 @@ public class ReservasView extends JFrame {
 	}
 
 	private	void getBookingValue() {
-		BigDecimal priceNight = BigDecimal.valueOf(15.5);
-		BigDecimal totalPrice;
 		if (checkInTxt.getDate() == null && checkOutTxt.getDate() == null) {
 			valueTxt.setText("");
 		} else {
@@ -358,9 +346,7 @@ public class ReservasView extends JFrame {
 			var checkOutActual = ChronoUnit.DAYS.between(today, checkOut);
 
 			if (days > 0 && checkInActual >= 0 && checkOutActual >= 0) {
-				BigDecimal bookingValue = priceNight.multiply(BigDecimal.valueOf(days));
-				totalPrice = bookingValue.setScale(2, RoundingMode.HALF_UP).stripTrailingZeros();
-
+				BigDecimal totalPrice = CalculateValue.getBookingValue(days);
 				valueTxt.setText(String.valueOf(totalPrice));
 			} else {
 				UserShowMessages.showErrorMessage(
@@ -369,6 +355,7 @@ public class ReservasView extends JFrame {
 				checkInTxt.setDate(null);
 				checkOutTxt.setDate(null);
 			}
+
 		}
 	}
 

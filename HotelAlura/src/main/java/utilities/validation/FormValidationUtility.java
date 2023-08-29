@@ -5,12 +5,10 @@ import utilities.DateConvertor;
 import utilities.JOptionPane.UserShowMessages;
 
 import javax.swing.*;
-import java.awt.event.KeyEvent;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FormValidationUtility {
     public static Boolean isBookingFormValid(
@@ -39,13 +37,12 @@ public class FormValidationUtility {
     public static Boolean isGuestFormValid(
             String name, String surname, JDateChooser birthdate, String phone
     ) {
-        String regexName = "^(?=.{3,25}$)([A-ZÁÉÍÓÚ][a-záéíóúñ]+(?:\\s[A-ZÁÉÍÓÚ][a-záéíóúñ]+)*)$";
-        String regexTel = "^(\\d{2}-){4}\\d{2}$";
-        Pattern patternName = Pattern.compile(regexName);
-        Pattern patternPhone = Pattern.compile(regexTel);
-        Matcher matchName = patternName.matcher(name);
-        Matcher matchSurname = patternName.matcher(surname);
-        Matcher matchPhone = patternPhone.matcher(phone);
+        Matcher matchName = TxtValidation.validateNameOrSurname(name);
+        Matcher matchSurname = TxtValidation.validateNameOrSurname(surname);
+
+
+        Matcher matchPhone = TxtValidation.validatePhoneNumber(phone);
+
         if (!matchName.find()) {
             UserShowMessages.showErrorMessage(
                     "Invalid Name",
@@ -97,12 +94,6 @@ public class FormValidationUtility {
                     "User field must not be null"
             );
             throw new IllegalArgumentException("User name not valid");
-        } else if (userCategory.getSelectedIndex() == 0) {
-            UserShowMessages.showErrorMessage(
-                    "User category not valid.",
-                    "Please select an user category"
-            );
-            throw new IllegalArgumentException("User category not valid");
         } else if (passwordField.getPassword().length == 0) {
             UserShowMessages.showErrorMessage(
                     "Password not valid.",
@@ -115,16 +106,16 @@ public class FormValidationUtility {
                     "Password too long, maximum 30 characters."
             );
             throw new IllegalArgumentException("Invalid password");
+        } else if (userCategory.getSelectedIndex() == -1) {
+            UserShowMessages.showErrorMessage(
+                    "User category not valid.",
+                    "Please select an user category"
+            );
+            throw new IllegalArgumentException("User category not valid");
         }
         return true;
     }
 
-    public static void onlyNumbers(KeyEvent keyEvent) {
-        char c = keyEvent.getKeyChar();
-        if (!Character.isDigit(c) && c != '.' && c != '-') {
-            keyEvent.consume();
-        }
-    }
 
     public static boolean validateSearchField(JTextField searchField) {
         if (searchField.getText().isEmpty()) {

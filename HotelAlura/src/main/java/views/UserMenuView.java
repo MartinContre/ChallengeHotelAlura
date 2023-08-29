@@ -1,51 +1,23 @@
 package views;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import utilities.views.colors.ViewColors;
 
-import java.awt.EventQueue;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.Toolkit;
-import javax.swing.SwingConstants;
 import java.awt.event.MouseMotionAdapter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.awt.SystemColor;
 import java.util.Objects;
-import javax.swing.JSeparator;
 
 public class UserMenuView extends JFrame {
 
 	int xMouse, yMouse;
 	private final JLabel labelExit;
 
-	private static final Logger LOGGER = LogManager.getLogger(UserMenuView.class);
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(() -> {
-            try {
-                UserMenuView frame = new UserMenuView();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage());
-            }
-        });
-	}
-
-	/**
-	 * Create the frame.
-	 */
 	public UserMenuView() {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(UserMenuView.class.getResource("/images/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -88,21 +60,21 @@ public class UserMenuView extends JFrame {
 		registerBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				registerBtn.setBackground(new Color(118, 187, 223));
+				registerBtn.setBackground(ViewColors.backgroundColorBtn());
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				registerBtn.setBackground(new Color(12, 138, 199));
+				registerBtn.setBackground(ViewColors.darkBackGroundColorBtn());
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ReservasView reservasView = new ReservasView();
-				reservasView.setVisible(true);
+				BookingsView bookingsView = new BookingsView();
+				bookingsView.setVisible(true);
 				dispose();
 			}
 		});
 		registerBtn.setBounds(0, 255, 257, 56);
-		registerBtn.setBackground(new Color(12, 138, 199));
+		registerBtn.setBackground(ViewColors.darkBackGroundColorBtn());
 		panelMenu.add(registerBtn);
 		registerBtn.setLayout(null);
 
@@ -118,32 +90,64 @@ public class UserMenuView extends JFrame {
 		searchBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				searchBtn.setBackground(new Color(118, 187, 223));
+				searchBtn.setBackground(ViewColors.backgroundColorBtn());
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				searchBtn.setBackground(new Color(12, 138, 199));
+				searchBtn.setBackground(ViewColors.darkBackGroundColorBtn());
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Busqueda busqueda = new Busqueda();
-				busqueda.setVisible(true);
+				SearchView searchView = new SearchView();
+				searchView.setVisible(true);
 				dispose();
 			}
 		});
 		searchBtn.setBounds(0, 312, 257, 56);
-		searchBtn.setBackground(new Color(12, 138, 199));
+		searchBtn.setBackground(ViewColors.darkBackGroundColorBtn());
 		panelMenu.add(searchBtn);
 		searchBtn.setLayout(null);
 		
-		JLabel bookingSearchLabel = new JLabel("Búsqueda");
-		bookingSearchLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/pessoas.png"))));
-		bookingSearchLabel.setBounds(27, 11, 200, 34);
-		bookingSearchLabel.setHorizontalAlignment(SwingConstants.LEFT);
-		bookingSearchLabel.setForeground(Color.WHITE);
-		bookingSearchLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
-		searchBtn.add(bookingSearchLabel);
-		
+		JLabel searchLabel = new JLabel("Búsqueda");
+		searchLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/pessoas.png"))));
+		searchLabel.setBounds(27, 11, 200, 34);
+		searchLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		searchLabel.setForeground(Color.WHITE);
+		searchLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+		searchBtn.add(searchLabel);
+
+		JPanel registerUserBtn = new JPanel();
+		registerUserBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				UserRegisterView userRegisterView = new UserRegisterView();
+				userRegisterView.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				registerUserBtn.setBackground(ViewColors.backgroundColorBtn());
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				registerUserBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+			}
+		});
+		registerUserBtn.setBounds(0, 369, 257, 56);
+		registerUserBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+		panelMenu.add(registerUserBtn);
+		registerUserBtn.setLayout(null);
+
+		JLabel registerUserLabel = new JLabel("Register user");
+		registerUserLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/registerUser.png"))));
+		registerUserLabel.setBounds(29, 11, 200, 34);
+		registerUserLabel.setForeground(SystemColor.text);
+		registerUserLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+		registerUserLabel.setHorizontalAlignment(SwingConstants.LEFT);
+		registerUserBtn.add(registerUserLabel);
+
 		JSeparator separator = new JSeparator();
 		separator.setBounds(26, 219, 201, 2);
 		panelMenu.add(separator);
@@ -151,6 +155,7 @@ public class UserMenuView extends JFrame {
 		header.setBackground(Color.WHITE);
 		header.setBounds(0, 0, 944, 36);
 		contentPane.add(header);
+
 
 		JPanel exitBtn = getjPanel();
 		header.add(exitBtn);
@@ -210,10 +215,10 @@ public class UserMenuView extends JFrame {
 	    secondUsage.setBounds(312, 482, 355, 27);
 	    contentPane.add(secondUsage);
 	    
-	    JLabel thirsUsage = new JLabel("- Eliminar todo tipo de registros");
-	    thirsUsage.setFont(new Font("Roboto", Font.PLAIN, 17));
-	    thirsUsage.setBounds(312, 520, 295, 27);
-	    contentPane.add(thirsUsage);
+	    JLabel thirdUsage = new JLabel("- Eliminar todo tipo de registros");
+	    thirdUsage.setFont(new Font("Roboto", Font.PLAIN, 17));
+	    thirdUsage.setBounds(312, 520, 295, 27);
+	    contentPane.add(thirdUsage);
 	}
 
 	private JPanel getjPanel() {

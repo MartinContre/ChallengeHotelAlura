@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import utilities.json.JsonReader;
 import utilities.json.JsonReaderUtils;
-import views.MenuPrincipal;
+import views.PrincipalMenu;
 
 import javax.swing.*;
 import java.sql.Connection;
@@ -37,7 +37,7 @@ public class ConnectionFactory {
                         "Connexion error",
                         JOptionPane.ERROR_MESSAGE
                 );
-                MenuPrincipal menuPrincipal = new MenuPrincipal();
+                PrincipalMenu menuPrincipal = new PrincipalMenu();
                 menuPrincipal.setVisible(true);
                 throw new RuntimeException(e.getMessage());
             }
