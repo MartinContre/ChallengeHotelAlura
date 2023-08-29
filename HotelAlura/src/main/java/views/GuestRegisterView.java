@@ -41,7 +41,7 @@ public class GuestRegisterView extends JFrame {
         this.guestController = new GuestController();
         this.bookingController = new BookingController();
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(GuestRegisterView.class.getResource("/images/lOGO-50PX.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(GuestRegisterView.class.getResource("/images/Logo50px.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 634);
         JPanel contentPane = new JPanel();
@@ -85,7 +85,7 @@ public class GuestRegisterView extends JFrame {
 
         JLabel titleLabel = new JLabel("REGISTRO HUÉSPED");
         titleLabel.setBounds(606, 55, 234, 42);
-        titleLabel.setForeground(new Color(12, 138, 199));
+        titleLabel.setForeground(ViewColors.vividSkyBlue());
         titleLabel.setFont(new Font("Roboto Black", Font.PLAIN, 23));
         contentPane.add(titleLabel);
 
@@ -119,7 +119,7 @@ public class GuestRegisterView extends JFrame {
 
         birthdateTxt = new JDateChooser();
         birthdateTxt.setBounds(560, 278, 285, 36);
-        birthdateTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/icon-reservas.png"))));
+        birthdateTxt.getCalendarButton().setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/BookingIcon.png"))));
         birthdateTxt.getCalendarButton().setBackground(SystemColor.textHighlight);
         birthdateTxt.setDateFormatString("yyyy-MM-dd");
         contentPane.add(birthdateTxt);
@@ -174,38 +174,38 @@ public class GuestRegisterView extends JFrame {
 
         JSeparator separator_1_2 = new JSeparator();
         separator_1_2.setBounds(560, 170, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2.setForeground(ViewColors.separatorColor());
-        separator_1_2.setBackground(ViewColors.separatorColor());
+        separator_1_2.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2);
 
         JSeparator separator_1_2_1 = new JSeparator();
         separator_1_2_1.setBounds(560, 240, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_1.setForeground(ViewColors.separatorColor());
-        separator_1_2_1.setBackground(ViewColors.separatorColor());
+        separator_1_2_1.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_1.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_1);
 
         JSeparator separator_1_2_2 = new JSeparator();
         separator_1_2_2.setBounds(560, 314, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_2.setForeground(ViewColors.separatorColor());
-        separator_1_2_2.setBackground(ViewColors.separatorColor());
+        separator_1_2_2.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_2.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_2);
 
         JSeparator separator_1_2_3 = new JSeparator();
         separator_1_2_3.setBounds(560, 386, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_3.setForeground(ViewColors.separatorColor());
-        separator_1_2_3.setBackground(ViewColors.separatorColor());
+        separator_1_2_3.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_3.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_3);
 
         JSeparator separator_1_2_4 = new JSeparator();
         separator_1_2_4.setBounds(560, 457, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_4.setForeground(ViewColors.separatorColor());
-        separator_1_2_4.setBackground(ViewColors.separatorColor());
+        separator_1_2_4.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_4.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_4);
 
         JSeparator separator_1_2_5 = new JSeparator();
         separator_1_2_5.setBounds(560, 529, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_5.setForeground(ViewColors.separatorColor());
-        separator_1_2_5.setBackground(ViewColors.separatorColor());
+        separator_1_2_5.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_5.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_5);
 
         JPanel saveBtn = new JPanel();
@@ -218,7 +218,7 @@ public class GuestRegisterView extends JFrame {
             }
         });
         saveBtn.setLayout(null);
-        saveBtn.setBackground(new Color(12, 138, 199));
+        saveBtn.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(saveBtn);
         saveBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -231,19 +231,19 @@ public class GuestRegisterView extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 489, 634);
-        panel.setBackground(new Color(12, 138, 199));
+        panel.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(panel);
         panel.setLayout(null);
 
         JLabel backgroundLabel = new JLabel("");
         backgroundLabel.setBounds(0, 121, 479, 502);
         panel.add(backgroundLabel);
-        backgroundLabel.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/registro.png"))));
+        backgroundLabel.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/Register.png"))));
 
         JLabel logo = new JLabel("");
         logo.setBounds(194, 39, 104, 107);
         panel.add(logo);
-        logo.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/Ha-100px.png"))));
+        logo.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/AH100px.png"))));
 
         JPanel btnExit = new JPanel();
         btnExit.setBounds(857, 0, 53, 36);
@@ -297,12 +297,12 @@ public class GuestRegisterView extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                backBtn.setBackground(new Color(12, 138, 199));
+                backBtn.setBackground(ViewColors.vividSkyBlue());
                 backLabel.setForeground(Color.white);
             }
         });
         backBtn.setLayout(null);
-        backBtn.setBackground(new Color(12, 138, 199));
+        backBtn.setBackground(ViewColors.vividSkyBlue());
         backBtn.setBounds(0, 0, 53, 36);
         return backBtn;
     }

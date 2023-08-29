@@ -10,6 +10,7 @@ import utilities.tables.DeleteRowsFromTable;
 import utilities.tables.LoadTableUtility;
 import utilities.tables.UpdateDBFromRow;
 import utilities.validation.FormValidationUtility;
+import utilities.views.colors.ViewColors;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -35,8 +36,8 @@ public class SearchView extends JFrame {
     private final DefaultTableModel tableModelUsers;
     private final JLabel backLabel;
     private final JLabel labelExit;
-
     int xMouse, yMouse;
+
 
     /**
      * Create the frame.
@@ -46,7 +47,7 @@ public class SearchView extends JFrame {
         this.bookingController = new BookingController();
         this.userController = new UserController();
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(SearchView.class.getResource("/images/lupa2.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(SearchView.class.getResource("/images/MagnifyingGlass.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 571);
         JPanel contentPane = new JPanel();
@@ -65,7 +66,7 @@ public class SearchView extends JFrame {
 
 
         JLabel lblNewLabel_4 = new JLabel("SISTEMA DE BÚSQUEDA");
-        lblNewLabel_4.setForeground(new Color(12, 138, 199));
+        lblNewLabel_4.setForeground(ViewColors.vividSkyBlue());
         lblNewLabel_4.setFont(new Font("Roboto Black", Font.BOLD, 24));
         lblNewLabel_4.setBounds(331, 62, 280, 42);
         contentPane.add(lblNewLabel_4);
@@ -79,7 +80,7 @@ public class SearchView extends JFrame {
                 case 2 -> loadUserTable();
             }
         });
-        panel.setBackground(new Color(12, 138, 199));
+        panel.setBackground(ViewColors.vividSkyBlue());
         panel.setFont(new Font("Roboto", Font.PLAIN, 16));
         panel.setBounds(20, 169, 865, 328);
         contentPane.add(panel);
@@ -95,7 +96,7 @@ public class SearchView extends JFrame {
         tableModelBooking.addColumn(TablesColumns.VALUE.getKey());
         tableModelBooking.addColumn(TablesColumns.PAYMENT_METHOD.getKey());
         JScrollPane scroll_tableBooking = new JScrollPane(bookingTable);
-        panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/reservado.png"))), scroll_tableBooking, null);
+        panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/Booking.png"))), scroll_tableBooking, null);
         scroll_tableBooking.setVisible(true);
 
         TableColumn idColumnBooking = bookingTable.getColumnModel().getColumn(0);
@@ -119,7 +120,7 @@ public class SearchView extends JFrame {
         tableModelGuest.addColumn(TablesColumns.PHONE.getKey());
         tableModelGuest.addColumn(TablesColumns.BOOKING_ID.getKey());
         JScrollPane scroll_tableGuests = new JScrollPane(guestTable);
-        panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/pessoas.png"))), scroll_tableGuests, null);
+        panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/SearchPeople.png"))), scroll_tableGuests, null);
         scroll_tableGuests.setVisible(true);
 
         TableColumn bookingIdColumnGuest = guestTable.getColumnModel().getColumn(6);
@@ -137,14 +138,14 @@ public class SearchView extends JFrame {
         tableModelUsers.addColumn(TablesColumns.USER_CATEGORY.getKey());
         tableModelUsers.addColumn(TablesColumns.USER_PASSWORD.getKey());
         JScrollPane scroll_tableUsers = new JScrollPane(userTable);
-        panel.addTab("Users", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/employee.png"))), scroll_tableUsers, null);
+        panel.addTab("Users", new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/Employee.png"))), scroll_tableUsers, null);
         scroll_tableUsers.setVisible(true);
 
         TableColumn idColumnUser = userTable.getColumnModel().getColumn(0);
         idColumnUser.setCellEditor(new CopyableCellEditor());
 
         JLabel lblNewLabel_2 = new JLabel("");
-        lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/Ha-100px.png"))));
+        lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(SearchView.class.getResource("/images/AH100px.png"))));
         lblNewLabel_2.setBounds(56, 51, 104, 107);
         contentPane.add(lblNewLabel_2);
 
@@ -171,8 +172,8 @@ public class SearchView extends JFrame {
         exitBtn.add(labelExit);
 
         JSeparator separator_1_2 = new JSeparator();
-        separator_1_2.setForeground(new Color(12, 138, 199));
-        separator_1_2.setBackground(new Color(12, 138, 199));
+        separator_1_2.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2.setBackground(ViewColors.vividSkyBlue());
         separator_1_2.setBounds(539, 159, 193, 2);
         contentPane.add(separator_1_2);
 
@@ -248,7 +249,7 @@ public class SearchView extends JFrame {
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                backBtn.setBackground(new Color(12, 138, 199));
+                backBtn.setBackground(ViewColors.vividSkyBlue());
                 backLabel.setForeground(Color.white);
             }
 
@@ -278,7 +279,7 @@ public class SearchView extends JFrame {
             }
         });
         deleteBtn.setLayout(null);
-        deleteBtn.setBackground(new Color(12, 138, 199));
+        deleteBtn.setBackground(ViewColors.vividSkyBlue());
         deleteBtn.setBounds(767, 508, 122, 35);
         deleteBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return deleteBtn;
@@ -298,7 +299,7 @@ public class SearchView extends JFrame {
             }
         });
         editBtn.setLayout(null);
-        editBtn.setBackground(new Color(12, 138, 199));
+        editBtn.setBackground(ViewColors.vividSkyBlue());
         editBtn.setBounds(635, 508, 122, 35);
         editBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return editBtn;
@@ -321,7 +322,7 @@ public class SearchView extends JFrame {
             }
         });
         searchBtn.setLayout(null);
-        searchBtn.setBackground(new Color(12, 138, 199));
+        searchBtn.setBackground(ViewColors.vividSkyBlue());
         searchBtn.setBounds(748, 125, 122, 35);
         searchBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
         return searchBtn;

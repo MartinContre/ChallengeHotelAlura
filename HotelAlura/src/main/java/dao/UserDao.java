@@ -31,12 +31,13 @@ public class UserDao extends BaseDao<User> {
         try {
             String sql = String.format("""
                             SELECT\s
-                            %s, %s, %s
+                            %s, %s, %s, %s
                             FROM %s
                             WHERE %s LIKE ?""",
                     ColumnsKey.ID.getKey(),
                     ColumnsKey.USER_NAME.getKey(),
                     ColumnsKey.USER_CATEGORY.getKey(),
+                    ColumnsKey.PASSWORD.getKey(),
                     tableName,
                     ColumnsKey.USER_CATEGORY.getKey());
             try ( PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -47,7 +48,8 @@ public class UserDao extends BaseDao<User> {
                     User row = new User(
                             resultSet.getInt(ColumnsKey.ID.getKey()),
                             resultSet.getString(ColumnsKey.USER_NAME.getKey()),
-                            StringUtilities.convertUserCategoryStrToEmployeeCategory(resultSet.getString(ColumnsKey.USER_CATEGORY.getKey()))
+                            StringUtilities.convertUserCategoryStrToEmployeeCategory(resultSet.getString(ColumnsKey.USER_CATEGORY.getKey())),
+                            resultSet.getString(ColumnsKey.PASSWORD.getKey())
                     );
                     result.add(row);
                 }

@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.util.Arrays;
 import java.util.Objects;
 
 public class UserRegisterView extends JFrame {
@@ -27,25 +26,10 @@ public class UserRegisterView extends JFrame {
 
     int xMouse, yMouse;
 
-
-    /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(() -> {
-            try {
-                UserRegisterView frame = new UserRegisterView();
-                frame.setVisible(true);
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        });
-    }
-
     public UserRegisterView() {
         this.userController = new UserController();
 
-        setIconImage(Toolkit.getDefaultToolkit().getImage(UserRegisterView.class.getResource("/images/lOGO-50PX.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(UserRegisterView.class.getResource("/images/Logo50px.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 634);
         JPanel contentPane = new JPanel();
@@ -56,24 +40,7 @@ public class UserRegisterView extends JFrame {
         setUndecorated(true);
         contentPane.setLayout(null);
 
-        JPanel header = new JPanel();
-        header.setBounds(0, 0, 910, 36);
-        header.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                headerMouseDragged(e);
-            }
-        });
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                headerMousePressed(e);
-            }
-        });
-        header.setLayout(null);
-        header.setBackground(SystemColor.text);
-        header.setOpaque(false);
-        header.setBounds(0, 0, 910, 36);
+        JPanel header = getHeader();
         contentPane.add(header);
 
         JPanel backBtn = getjPanel();
@@ -88,7 +55,7 @@ public class UserRegisterView extends JFrame {
 
         JLabel titleLabel = new JLabel("USER REGISTRATION");
         titleLabel.setBounds(606, 55, 234, 42);
-        titleLabel.setForeground(new Color(12, 138, 199));
+        titleLabel.setForeground(ViewColors.vividSkyBlue());
         titleLabel.setFont(new Font("Roboto Black", Font.PLAIN, 23));
         contentPane.add(titleLabel);
 
@@ -103,7 +70,7 @@ public class UserRegisterView extends JFrame {
             }
         });
         saveBtn.setLayout(null);
-        saveBtn.setBackground(new Color(12, 138, 199));
+        saveBtn.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(saveBtn);
         saveBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
@@ -116,42 +83,21 @@ public class UserRegisterView extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setBounds(0, 0, 489, 634);
-        panel.setBackground(new Color(12, 138, 199));
+        panel.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(panel);
         panel.setLayout(null);
 
         JLabel backgroundLabel = new JLabel("");
         backgroundLabel.setBounds(0, 121, 479, 502);
         panel.add(backgroundLabel);
-        backgroundLabel.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/registro.png"))));
+        backgroundLabel.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/Register.png"))));
 
         JLabel logo = new JLabel("");
         logo.setBounds(194, 39, 104, 107);
         panel.add(logo);
-        logo.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/Ha-100px.png"))));
+        logo.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/AH100px.png"))));
 
-        JPanel exitBtn = new JPanel();
-        exitBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                dispose();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                exitBtn.setBackground(Color.red);
-                exitLabel.setForeground(Color.white);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                exitBtn.setBackground(Color.white);
-                exitLabel.setForeground(Color.black);
-            }
-        });
-        exitBtn.setLayout(null);
-        exitBtn.setBackground(Color.white);
-        exitBtn.setBounds(857, 0, 53, 36);
+        JPanel exitBtn = getExitBtn();
         contentPane.add(exitBtn);
 
         exitLabel = new JLabel("X");
@@ -204,17 +150,65 @@ public class UserRegisterView extends JFrame {
 
         JSeparator separator_1_2 = new JSeparator();
         separator_1_2.setBounds(560, 170, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2.setForeground(ViewColors.separatorColor());
-        separator_1_2.setBackground(ViewColors.separatorColor());
+        separator_1_2.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2);
 
         JSeparator separator_1_2_1 = new JSeparator();
         separator_1_2_1.setBounds(560, 240, SeparatorUtils.getWidth(), SeparatorUtils.getHeight());
-        separator_1_2_1.setForeground(ViewColors.separatorColor());
-        separator_1_2_1.setBackground(ViewColors.separatorColor());
+        separator_1_2_1.setForeground(ViewColors.vividSkyBlue());
+        separator_1_2_1.setBackground(ViewColors.vividSkyBlue());
         contentPane.add(separator_1_2_1);
 
 
+    }
+
+    private JPanel getExitBtn() {
+        JPanel exitBtn = new JPanel();
+        exitBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                dispose();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                exitBtn.setBackground(Color.red);
+                exitLabel.setForeground(Color.white);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                exitBtn.setBackground(Color.white);
+                exitLabel.setForeground(Color.black);
+            }
+        });
+        exitBtn.setLayout(null);
+        exitBtn.setBackground(Color.white);
+        exitBtn.setBounds(857, 0, 53, 36);
+        return exitBtn;
+    }
+
+    private JPanel getHeader() {
+        JPanel header = new JPanel();
+        header.setBounds(0, 0, 910, 36);
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                headerMouseDragged(e);
+            }
+        });
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                headerMousePressed(e);
+            }
+        });
+        header.setLayout(null);
+        header.setBackground(SystemColor.text);
+        header.setOpaque(false);
+        header.setBounds(0, 0, 910, 36);
+        return header;
     }
 
     private JPanel getjPanel() {
@@ -235,12 +229,12 @@ public class UserRegisterView extends JFrame {
 
             @Override
             public void mouseExited(MouseEvent e) {
-                backBtn.setBackground(new Color(12, 138, 199));
+                backBtn.setBackground(ViewColors.vividSkyBlue());
                 backLabel.setForeground(Color.white);
             }
         });
         backBtn.setLayout(null);
-        backBtn.setBackground(new Color(12, 138, 199));
+        backBtn.setBackground(ViewColors.vividSkyBlue());
         backBtn.setBounds(0, 0, 53, 36);
         return backBtn;
     }
@@ -257,7 +251,12 @@ public class UserRegisterView extends JFrame {
             user.setName(name);
             EmployeeCategory category = EmployeeCategory.valueOf(Objects.requireNonNull(employeeCategoryTxt.getSelectedItem()).toString());
             user.setCategory(category);
-            user.setPassword(Arrays.toString(passwordTxt.getPassword()));
+
+            char[] passwordChars = passwordTxt.getPassword();
+
+            String password = new String(passwordChars);
+
+            user.setPassword(password);
 
             this.userController.save(user);
             showSaveMessage();

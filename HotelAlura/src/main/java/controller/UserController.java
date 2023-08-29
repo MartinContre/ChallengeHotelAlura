@@ -3,6 +3,7 @@ package controller;
 import dao.UserDao;
 import factory.ConnectionFactory;
 import model.User;
+import utilities.JOptionPane.UserShowMessages;
 
 import java.util.List;
 
@@ -27,7 +28,20 @@ public class UserController {
     }
 
     public void save(User user) {
-        userDao.insert(user);
+        List<User> users = list();
+
+        boolean isUsernameTaken = users.stream().anyMatch(user1 -> user1.getName().equals(user.getName()));
+
+        if (isUsernameTaken) {
+            UserShowMessages.showErrorMessage(
+                    "User use",
+                    "Please select another user name"
+            );
+            throw new IllegalArgumentException();
+        } else {
+            userDao.insert(user);
+        }
+
     }
 
     public Integer update(User user) {

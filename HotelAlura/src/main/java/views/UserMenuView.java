@@ -19,7 +19,7 @@ public class UserMenuView extends JFrame {
 
 
 	public UserMenuView() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(UserMenuView.class.getResource("/images/aH-40px.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(UserMenuView.class.getResource("/images/AH40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 944, 609);
 		JPanel contentPane = new JPanel();
@@ -46,7 +46,7 @@ public class UserMenuView extends JFrame {
 		});
 		
 		JPanel panelMenu = new JPanel();
-		panelMenu.setBackground(new Color(12, 138, 199));
+		panelMenu.setBackground(ViewColors.vividSkyBlue());
 		panelMenu.setBounds(0, 0, 257, 609);
 		contentPane.add(panelMenu);
 		panelMenu.setLayout(null);
@@ -54,17 +54,17 @@ public class UserMenuView extends JFrame {
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setBounds(50, 58, 150, 150);
 		panelMenu.add(lblNewLabel_2);
-		lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/aH-150px.png"))));
+		lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/AH150px.png"))));
 		
 		JPanel registerBtn = new JPanel();
 		registerBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				registerBtn.setBackground(ViewColors.backgroundColorBtn());
+				registerBtn.setBackground(ViewColors.sereneOceanBlue());
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				registerBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+				registerBtn.setBackground(ViewColors.vividSkyBlue());
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -74,12 +74,12 @@ public class UserMenuView extends JFrame {
 			}
 		});
 		registerBtn.setBounds(0, 255, 257, 56);
-		registerBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+		registerBtn.setBackground(ViewColors.vividSkyBlue());
 		panelMenu.add(registerBtn);
 		registerBtn.setLayout(null);
 
 		JLabel registerLabel = new JLabel("Registro de reservas");
-		registerLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/reservado.png"))));
+		registerLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/Booking.png"))));
 		registerLabel.setForeground(SystemColor.text);
 		registerLabel.setBounds(25, 11, 205, 34);
 		registerLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
@@ -90,11 +90,11 @@ public class UserMenuView extends JFrame {
 		searchBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				searchBtn.setBackground(ViewColors.backgroundColorBtn());
+				searchBtn.setBackground(ViewColors.sereneOceanBlue());
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				searchBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+				searchBtn.setBackground(ViewColors.vividSkyBlue());
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -104,12 +104,12 @@ public class UserMenuView extends JFrame {
 			}
 		});
 		searchBtn.setBounds(0, 312, 257, 56);
-		searchBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+		searchBtn.setBackground(ViewColors.vividSkyBlue());
 		panelMenu.add(searchBtn);
 		searchBtn.setLayout(null);
 		
 		JLabel searchLabel = new JLabel("Búsqueda");
-		searchLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/pessoas.png"))));
+		searchLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/SearchPeople.png"))));
 		searchLabel.setBounds(27, 11, 200, 34);
 		searchLabel.setHorizontalAlignment(SwingConstants.LEFT);
 		searchLabel.setForeground(Color.WHITE);
@@ -127,21 +127,21 @@ public class UserMenuView extends JFrame {
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				registerUserBtn.setBackground(ViewColors.backgroundColorBtn());
+				registerUserBtn.setBackground(ViewColors.sereneOceanBlue());
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
-				registerUserBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+				registerUserBtn.setBackground(ViewColors.vividSkyBlue());
 			}
 		});
 		registerUserBtn.setBounds(0, 369, 257, 56);
-		registerUserBtn.setBackground(ViewColors.darkBackGroundColorBtn());
+		registerUserBtn.setBackground(ViewColors.vividSkyBlue());
 		panelMenu.add(registerUserBtn);
 		registerUserBtn.setLayout(null);
 
 		JLabel registerUserLabel = new JLabel("Register user");
-		registerUserLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/registerUser.png"))));
+		registerUserLabel.setIcon(new ImageIcon(Objects.requireNonNull(UserMenuView.class.getResource("/images/RegisterUser.png"))));
 		registerUserLabel.setBounds(29, 11, 200, 34);
 		registerUserLabel.setForeground(SystemColor.text);
 		registerUserLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
@@ -167,7 +167,7 @@ public class UserMenuView extends JFrame {
 		labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 		
 	    JPanel datePanel = new JPanel();
-	    datePanel.setBackground(new Color(118, 187, 223));
+	    datePanel.setBackground(ViewColors.sereneOceanBlue());
 	    datePanel.setBounds(256, 84, 688, 121);
 	    contentPane.add(datePanel);
 	    datePanel.setLayout(null);

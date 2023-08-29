@@ -1,5 +1,7 @@
 package views;
 
+import utilities.views.colors.ViewColors;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -8,11 +10,8 @@ import java.util.Objects;
 
 public class Successful extends JDialog {
 
-	/**
-	 * Create the dialog.
-	 */
 	public Successful() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Successful.class.getResource("/images/aH-40px.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Successful.class.getResource("/images/AH40px.png")));
 		setBounds(100, 100, 394, 226);
 		getContentPane().setLayout(new BorderLayout());
 		JPanel contentPanel = new JPanel();
@@ -23,13 +22,13 @@ public class Successful extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("");
-			lblNewLabel.setIcon(new ImageIcon(Objects.requireNonNull(Successful.class.getResource("/images/Ha-100px.png"))));
+			lblNewLabel.setIcon(new ImageIcon(Objects.requireNonNull(Successful.class.getResource("/images/AH100px.png"))));
 			lblNewLabel.setBounds(123, 11, 100, 100);
 			contentPanel.add(lblNewLabel);
 		}
 		{
 			JLabel lblNewLabel_1 = new JLabel("Datos guardados satisfactoriamente");
-			lblNewLabel_1.setForeground(new Color (12, 138, 199));
+			lblNewLabel_1.setForeground(ViewColors.vividSkyBlue());
 			lblNewLabel_1.setFont(new Font("Arial", Font.BOLD, 18));
 			lblNewLabel_1.setBounds(27, 122, 322, 21);
 			contentPanel.add(lblNewLabel_1);
@@ -42,8 +41,8 @@ public class Successful extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(e -> {
                     dispose();
-                    UserMenuView usuario = new UserMenuView();
-                    usuario.setVisible(true);
+                    UserMenuView userMenuView = new UserMenuView();
+                    userMenuView.setVisible(true);
                 });
 				okButton.setActionCommand("OK");
 				buttonPane.add(okButton);

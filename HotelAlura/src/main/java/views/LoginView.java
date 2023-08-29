@@ -3,6 +3,7 @@ package views;
 import controller.UserController;
 import model.User;
 import utilities.JOptionPane.UserShowMessages;
+import utilities.views.colors.ViewColors;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -14,11 +15,8 @@ import java.io.Serial;
 import java.util.List;
 import java.util.Objects;
 
-public class Login extends JFrame {
+public class LoginView extends JFrame {
 
-	/**
-	 * 
-	 */
 	@Serial
 	private static final long serialVersionUID = 1L;
 	private final JTextField userField;
@@ -29,9 +27,8 @@ public class Login extends JFrame {
 	private final UserController userController;
 
 
-
 	public void setUser(User user) {
-		Login.user = user;
+		LoginView.user = user;
 	}
 
 	private void clearFields() {
@@ -58,6 +55,13 @@ public class Login extends JFrame {
 		} else {
 			String userName = userField.getText();
 			String password = String.valueOf(passwordField.getPassword());
+
+			User userEnter = new User();
+			userEnter.setName(userName);
+			userEnter.setPassword(password);
+
+			password = userEnter.getPassword();
+
 			List<User> users = this.userController.list(userName, password);
 			if (users.isEmpty()) {
 				JOptionPane.showMessageDialog(
@@ -68,6 +72,7 @@ public class Login extends JFrame {
 			} else {
 				users.forEach(this::setUser);
 				this.dispose();
+
 				UserMenuView userMenuView = new UserMenuView();
 				userMenuView.setVisible(true);
 			}
@@ -80,7 +85,7 @@ public class Login extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Login() {
+	public LoginView() {
 		this.userController = new UserController();
 		setResizable(false);
 		setUndecorated(true);
@@ -100,7 +105,7 @@ public class Login extends JFrame {
 		panel.setLayout(null);
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(12, 138, 199));
+		panel_1.setBackground(ViewColors.vividSkyBlue());
 		panel_1.setBounds(484, 0, 304, 527);
 		panel.add(panel_1);
 		panel_1.setLayout(null);
@@ -108,7 +113,7 @@ public class Login extends JFrame {
 		JLabel imgHotel = new JLabel("");
 		imgHotel.setBounds(0, 0, 304, 538);
 		panel_1.add(imgHotel);
-		imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/img-hotel-login-.png"))));
+		imgHotel.setIcon(new ImageIcon(Objects.requireNonNull(LoginView.class.getResource("/images/LoginHotel.png"))));
 		
 		JPanel exitBtn = new JPanel();
 		exitBtn.setBounds(251, 0, 53, 36);
@@ -125,11 +130,11 @@ public class Login extends JFrame {
 			}			
 			@Override
 			public void mouseExited(MouseEvent e) {
-				 exitBtn.setBackground(new Color(12, 138, 199));
+				 exitBtn.setBackground(ViewColors.vividSkyBlue());
 			     exitLabel.setForeground(Color.white);
 			}
 		});
-		exitBtn.setBackground(new Color(12, 138, 199));
+		exitBtn.setBackground(ViewColors.vividSkyBlue());
 		exitBtn.setLayout(null);
 		exitBtn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 		
@@ -242,7 +247,7 @@ public class Login extends JFrame {
 		
 		JLabel lblNewLabel_1 = new JLabel("");
 		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setIcon(new ImageIcon(Objects.requireNonNull(Login.class.getResource("/images/lOGO-50PX.png"))));
+		lblNewLabel_1.setIcon(new ImageIcon(Objects.requireNonNull(LoginView.class.getResource("/images/Logo50px.png"))));
 		lblNewLabel_1.setBounds(65, 65, 48, 59);
 		panel.add(lblNewLabel_1);
 		

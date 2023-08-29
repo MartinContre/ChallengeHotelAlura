@@ -2,6 +2,7 @@ package views;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utilities.views.colors.ViewColors;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
@@ -44,7 +45,7 @@ public class PrincipalMenu extends JFrame {
 	 * Create the frame.
 	 */
 	public PrincipalMenu() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(PrincipalMenu.class.getResource("/images/aH-40px.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(PrincipalMenu.class.getResource("/images/AH40px.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 910, 537);
 		JPanel contentPane = new JPanel();
@@ -64,23 +65,23 @@ public class PrincipalMenu extends JFrame {
 		
 		JLabel backGroundImage = new JLabel("");
 		backGroundImage.setBounds(-50, 0, 732, 501);
-		backGroundImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/menu-img.png"))));
+		backGroundImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/Menu.png"))));
 		panel.add(backGroundImage);
 		
 		JLabel logo = new JLabel("");
 		logo.setBounds(722, 80, 150, 156);
-		logo.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/aH-150px.png"))));
+		logo.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/AH150px.png"))));
 		panel.add(logo);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBounds(0, 500, 910, 37);
-		panel_1.setBackground(new Color(12, 138, 199));
+		panel_1.setBackground(ViewColors.vividSkyBlue());
 		panel.add(panel_1);
 		panel_1.setLayout(null);
 		
 		JLabel lblCopyR = new JLabel("Developed by Martin P © 2023");
 		lblCopyR.setBounds(315, 11, 284, 19);
-		lblCopyR.setForeground(new Color(240, 248, 255));
+		lblCopyR.setForeground(ViewColors.aliceBlue());
 		lblCopyR.setFont(new Font("Roboto", Font.PLAIN, 16));
 		panel_1.add(lblCopyR);
 		
@@ -117,7 +118,7 @@ public class PrincipalMenu extends JFrame {
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
+				LoginView login = new LoginView();
 				login.setVisible(true);
 				dispose();
 			}
@@ -131,7 +132,7 @@ public class PrincipalMenu extends JFrame {
 		loginImage.setBounds(0, 0, 80, 70);
 		btnLogin.add(loginImage);
 		loginImage.setHorizontalAlignment(SwingConstants.CENTER);
-		loginImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/login.png"))));
+		loginImage.setIcon(new ImageIcon(Objects.requireNonNull(PrincipalMenu.class.getResource("/images/LoginIcon.png"))));
 		
 		JLabel titleLabel = new JLabel("LOGIN");
 		titleLabel.setBounds(754, 265, 83, 24);
