@@ -4,9 +4,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import utilities.exception.KeyNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import utilities.exception.KeyNotFoundException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +26,7 @@ public class JsonReader {
      * Creates a new instance of the JsonReader class.
      *
      * @param filePath The path to the JSON file.
+     * @throws RuntimeException if the JSON file cannot be loaded.
      */
     public JsonReader(String filePath) {
         File file = new File(filePath);
@@ -88,6 +89,7 @@ public class JsonReader {
      *
      * @param key The key for retrieving the value.
      * @return The value as a string.
+     * @throws RuntimeException if the key is not found in the JSON object.
      */
     public String getValue(String key) {
         JsonElement element = jsonObject.get(key);

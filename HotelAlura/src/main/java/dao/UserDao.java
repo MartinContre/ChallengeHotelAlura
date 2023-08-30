@@ -1,9 +1,9 @@
 package dao;
 
 import model.User;
+import utilities.InsetFieldGenerator;
 import utilities.StringUtilities;
 import utilities.enums.ColumnsKey;
-import utilities.InsetFieldGenerator;
 import utilities.enums.EmployeeCategory;
 
 import javax.swing.*;
@@ -14,6 +14,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object (DAO) class for managing User objects in the database.
+ * This class provides methods to interact with the "users" table.
+ */
 public class UserDao extends BaseDao<User> {
     private static final String INSERT_VALUES = "(?, ?, ?)";
     private static final int UPDATE_VALUES_COUNT = 4;
@@ -21,12 +25,24 @@ public class UserDao extends BaseDao<User> {
             ColumnsKey.USER_NAME.getKey(), ColumnsKey.USER_CATEGORY.getKey(), ColumnsKey.PASSWORD.getKey()
     };
 
-    public UserDao (Connection connection) {
+    /**
+     * Constructs a new instance of UserDao.
+     *
+     * @param connection The database connection to use for operations.
+     */
+    public UserDao(Connection connection) {
         tableName = "users";
         this.connection = connection;
     }
 
-    public List<User>  list(String userCategory) {
+    /**
+     * Retrieves a list of User objects with a matching user category from the database.
+     *
+     * @param userCategory The user category to filter the results.
+     * @return A list of User objects with matching user category.
+     * @throws RuntimeException If an error occurs while retrieving the data.
+     */
+    public List<User> list(String userCategory) {
         List<User> result = new ArrayList<>();
         try {
             String sql = String.format("""
@@ -40,7 +56,7 @@ public class UserDao extends BaseDao<User> {
                     ColumnsKey.PASSWORD.getKey(),
                     tableName,
                     ColumnsKey.USER_CATEGORY.getKey());
-            try ( PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
                 preparedStatement.setString(1, userCategory.concat("%"));
                 preparedStatement.execute();
                 ResultSet resultSet = preparedStatement.getResultSet();
@@ -48,7 +64,9 @@ public class UserDao extends BaseDao<User> {
                     User row = new User(
                             resultSet.getInt(ColumnsKey.ID.getKey()),
                             resultSet.getString(ColumnsKey.USER_NAME.getKey()),
-                            StringUtilities.convertUserCategoryStrToEmployeeCategory(resultSet.getString(ColumnsKey.USER_CATEGORY.getKey())),
+                            StringUtilities.convertUserCategoryStrToEmployeeCategory(
+                                    resultSet.getString(ColumnsKey.USER_CATEGORY.getKey())
+                            ),
                             resultSet.getString(ColumnsKey.PASSWORD.getKey())
                     );
                     result.add(row);
@@ -67,6 +85,14 @@ public class UserDao extends BaseDao<User> {
         }
     }
 
+    /**
+     * Retrieves a list of User objects with matching username and password from the database.
+     *
+     * @param userName The username to match.
+     * @param password The password to match.
+     * @return A list of User objects with matching username and password.
+     * @throws RuntimeException If an error occurs while retrieving the data.
+     */
     public List<User> list(String userName, String password) {
         List<User> result = new ArrayList<>();
         try {
@@ -78,7 +104,7 @@ public class UserDao extends BaseDao<User> {
                     ColumnsKey.USER_NAME.getKey(),
                     ColumnsKey.PASSWORD
             );
-            try (PreparedStatement statement = connection.prepareStatement(sql)){
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setString(1, userName);
                 statement.setString(2, password);
                 statement.execute();

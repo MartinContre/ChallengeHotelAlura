@@ -19,6 +19,17 @@ import java.awt.event.MouseMotionAdapter;
 import java.sql.Date;
 import java.util.Objects;
 
+/**
+ * Graphical user interface for registering guests in the Hotel Alura application.
+ * This class provides a form for users to input guest information, select room preferences,
+ * and finalize the guest registration process.
+ * The class also handles data validation and navigation.
+ * Usage:
+ * - Create an instance of this class to display the guest registration form.
+ * Example:
+ * GuestRegisterView 'guestRegisterView' = new GuestRegisterView();
+ * guestRegisterView.setVisible(true);
+ */
 public class GuestRegisterView extends JFrame {
 
     private final JTextField nameTxt;
@@ -35,7 +46,8 @@ public class GuestRegisterView extends JFrame {
 
 
     /**
-     * Create the frame.
+     * Creates a new instance of the GuestRegisterView.
+     * Initializes the user interface components and controllers.
      */
     public GuestRegisterView() {
         this.guestController = new GuestController();
@@ -52,28 +64,10 @@ public class GuestRegisterView extends JFrame {
         setUndecorated(true);
         contentPane.setLayout(null);
 
-        JPanel header = new JPanel();
-        header.setBounds(0, 0, 910, 36);
-        header.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                headerMouseDragged(e);
-
-            }
-        });
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                headerMousePressed(e);
-            }
-        });
-        header.setLayout(null);
-        header.setBackground(SystemColor.text);
-        header.setOpaque(false);
-        header.setBounds(0, 0, 910, 36);
+        JPanel header = getHeader();
         contentPane.add(header);
 
-        JPanel backBtn = getjPanel();
+        JPanel backBtn = getBackBtn();
         header.add(backBtn);
 
         backLabel = new JLabel("<");
@@ -245,41 +239,87 @@ public class GuestRegisterView extends JFrame {
         panel.add(logo);
         logo.setIcon(new ImageIcon(Objects.requireNonNull(GuestRegisterView.class.getResource("/images/AH100px.png"))));
 
-        JPanel btnExit = new JPanel();
-        btnExit.setBounds(857, 0, 53, 36);
-        contentPane.add(btnExit);
-        btnExit.addMouseListener(new MouseAdapter() {
+        JPanel exitBtn = getExitBtn();
+        contentPane.add(exitBtn);
+
+        exitLabel = new JLabel("X");
+        exitLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        exitLabel.setForeground(SystemColor.black);
+        exitLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+        exitLabel.setBounds(0, 0, 53, 36);
+        exitBtn.add(exitLabel);
+    }
+
+    /**
+     * Creates and returns a JPanel representing the exit button.
+     * This button, when clicked, navigates to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the exit button with appropriate properties and actions.
+     */
+    private JPanel getExitBtn() {
+        JPanel exitBtn = new JPanel();
+        exitBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JFrame principal = new PrincipalMenu();
+                JFrame principal = new MainMenu();
                 principal.setVisible(true);
                 dispose();
             }
 
             @Override
             public void mouseEntered(MouseEvent e) {
-                btnExit.setBackground(Color.red);
+                exitBtn.setBackground(Color.red);
                 exitLabel.setForeground(Color.white);
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                btnExit.setBackground(Color.white);
+                exitBtn.setBackground(Color.white);
                 exitLabel.setForeground(Color.black);
             }
         });
-        btnExit.setLayout(null);
-        btnExit.setBackground(Color.white);
-
-        exitLabel = new JLabel("X");
-        exitLabel.setBounds(0, 0, 53, 36);
-        btnExit.add(exitLabel);
-        exitLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        exitLabel.setForeground(SystemColor.black);
-        exitLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+        exitBtn.setLayout(null);
+        exitBtn.setBackground(Color.white);
+        exitBtn.setBounds(857, 0, 53, 36);
+        return exitBtn;
     }
 
-    private JPanel getjPanel() {
+
+    /**
+     * Creates and returns a JPanel representing the header area.
+     * This header area is designed to support mouse dragging for window movement.
+     *
+     * @return A JPanel containing the header with appropriate properties and actions.
+     */
+    private JPanel getHeader() {
+        JPanel header = new JPanel();
+        header.setBounds(0, 0, 910, 36);
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                headerMouseDragged(e);
+            }
+        });
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                headerMousePressed(e);
+            }
+        });
+        header.setLayout(null);
+        header.setBackground(SystemColor.text);
+        header.setOpaque(false);
+        header.setBounds(0, 0, 910, 36);
+        return header;
+    }
+
+    /**
+     * Creates and returns a JPanel representing the back button.
+     * This button provides navigation functionality to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the edit (back) button with appropriate properties and actions.
+     */
+    private JPanel getBackBtn() {
         JPanel backBtn = new JPanel();
         backBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -307,6 +347,9 @@ public class GuestRegisterView extends JFrame {
         return backBtn;
     }
 
+    /**
+     * Saves the booking into the database
+     */
     private void saveBooking() {
         if (FormValidationUtility.isGuestFormValid(
                 nameTxt.getText(),
@@ -319,6 +362,9 @@ public class GuestRegisterView extends JFrame {
         }
     }
 
+    /**
+     * Saves the guest into the database
+     */
     private void saveGuest() {
         Date birthDate = Date.valueOf(DateConvertor.convertDateToLocalDate(birthdateTxt.getDate()));
         Guest guest = new Guest(
@@ -332,17 +378,30 @@ public class GuestRegisterView extends JFrame {
         showSaveMessage();
     }
 
+    /**
+     * If the guest and the booking were saved successfully, show a message
+     */
     private void showSaveMessage() {
-        Successful success = new Successful();
+        SuccessDialog success = new SuccessDialog();
         success.setVisible(true);
         this.dispose();
     }
 
+    /**
+     * Handles the header mouse-pressed event.
+     *
+     * @param evt The mouse event
+     */
     private void headerMousePressed(MouseEvent evt) {
         xMouse = evt.getX();
         yMouse = evt.getY();
     }
 
+    /**
+     * Handles the header mouse-dragged event.
+     *
+     * @param evt The mouse event
+     */
     private void headerMouseDragged(MouseEvent evt) {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();

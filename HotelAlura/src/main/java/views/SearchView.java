@@ -22,6 +22,17 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
 
+
+/**
+ * The graphical user interface for searching and managing bookings, guests, and users.
+ * This class provides a comprehensive interface for searching, editing, and managing booking, guest, and user data.
+ * Users can perform various actions such as search, edit, and delete on different tabs.
+ * Usage:
+ * - Create an instance of this class to display the search and management interface.
+ * Example:
+ * SearchView 'searchView' = new SearchView();
+ * searchView.setVisible(true);
+ */
 public class SearchView extends JFrame {
 
     private final GuestController guestController;
@@ -40,7 +51,7 @@ public class SearchView extends JFrame {
 
 
     /**
-     * Create the frame.
+     * Creates the frame and initializes the necessary components.
      */
     public SearchView() {
         this.guestController = new GuestController();
@@ -149,10 +160,10 @@ public class SearchView extends JFrame {
         lblNewLabel_2.setBounds(56, 51, 104, 107);
         contentPane.add(lblNewLabel_2);
 
-        JPanel header = getjPanel();
+        JPanel header = getHeader();
         contentPane.add(header);
 
-        JPanel backBtn = getPanel();
+        JPanel backBtn = getBackBtn();
         header.add(backBtn);
 
         backLabel = new JLabel("<");
@@ -177,7 +188,7 @@ public class SearchView extends JFrame {
         separator_1_2.setBounds(539, 159, 193, 2);
         contentPane.add(separator_1_2);
 
-        JPanel searchBtn = getjPanel(panel);
+        JPanel searchBtn = getHeader(panel);
         contentPane.add(searchBtn);
 
         JLabel searchLabel = new JLabel("SEARCH");
@@ -187,7 +198,7 @@ public class SearchView extends JFrame {
         searchLabel.setForeground(Color.WHITE);
         searchLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
 
-        JPanel editBtn = getPanel(panel);
+        JPanel editBtn = getEditBtn(panel);
         contentPane.add(editBtn);
 
         JLabel editLabel = new JLabel("EDIT");
@@ -209,6 +220,12 @@ public class SearchView extends JFrame {
         setResizable(false);
     }
 
+    /**
+     * Creates and returns a JPanel representing the exit button.
+     * This button, when clicked, navigates to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the exit button with appropriate properties and actions.
+     */
     private JPanel getExitBtn() {
         JPanel exitBtn = new JPanel();
         exitBtn.addMouseListener(new MouseAdapter() {
@@ -237,7 +254,14 @@ public class SearchView extends JFrame {
         return exitBtn;
     }
 
-    private JPanel getPanel() {
+    /**
+     * Creates and returns a JPanel representing the back button.
+     * This button provides navigation functionality to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the edit (back) button with appropriate properties and actions.
+     */
+
+    private JPanel getBackBtn() {
         JPanel backBtn = new JPanel();
         backBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -265,6 +289,13 @@ public class SearchView extends JFrame {
         return backBtn;
     }
 
+    /**
+     * Creates and returns a JPanel representing the deleted button.
+     * This button, when clicked, performs different delete actions based on the selected tab.
+     *
+     * @param panel The JTabbedPane instance from which the current selected tab index is determined.
+     * @return A JPanel containing the deleted button with appropriate properties and actions.
+     */
     private JPanel getDeleteBtn(JTabbedPane panel) {
         JPanel deleteBtn = new JPanel();
         deleteBtn.addMouseListener(new MouseAdapter() {
@@ -285,7 +316,14 @@ public class SearchView extends JFrame {
         return deleteBtn;
     }
 
-    private JPanel getPanel(JTabbedPane panel) {
+    /**
+     * Creates and returns a JPanel representing the edit button.
+     * This button, when clicked, performs different update actions based on the selected tab.
+     *
+     * @param panel The JTabbedPane instance from which the current selected tab index is determined.
+     * @return A JPanel containing the edit button with appropriate properties and actions.
+     */
+    private JPanel getEditBtn(JTabbedPane panel) {
         JPanel editBtn = new JPanel();
         editBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -305,7 +343,14 @@ public class SearchView extends JFrame {
         return editBtn;
     }
 
-    private JPanel getjPanel(JTabbedPane panel) {
+    /**
+     * Creates and returns a JPanel representing the search button in the header.
+     * This button, when clicked, triggers table loading based on the selected tab and the provided search text.
+     *
+     * @param panel The JTabbedPane instance from which the current selected tab index is determined.
+     * @return A JPanel containing the search button with appropriate properties and actions.
+     */
+    private JPanel getHeader(JTabbedPane panel) {
         JPanel searchBtn = new JPanel();
         searchBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -328,7 +373,13 @@ public class SearchView extends JFrame {
         return searchBtn;
     }
 
-    private JPanel getjPanel() {
+    /**
+     * Creates and returns a JPanel representing the header area.
+     * This header area is designed to support mouse dragging for window movement.
+     *
+     * @return A JPanel containing the header with appropriate properties and actions.
+     */
+    private JPanel getHeader() {
         JPanel header = new JPanel();
         header.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -348,30 +399,47 @@ public class SearchView extends JFrame {
         return header;
     }
 
-
+    /**
+     * Loads the data in the guest table from the DB.
+     */
     private void loadGuestTable() {
         LoadTableUtility.guestTable(tableModelGuest, this.guestController);
         clearSearchTxt();
     }
 
+    /**
+     * Loads the data searched by Surname in the guest table from the DB.
+     */
     private void loadGuestTable(JTextField searchField) {
         LoadTableUtility.guestTable(tableModelGuest, this.guestController, searchField);
     }
 
+    /**
+     * Loads the data in the booking table from the DB.
+     */
     private void loadBookingTable() {
         LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, bookingTable);
         clearSearchTxt();
     }
 
+    /**
+     * Loads the data searched by booking id in the booking table from the DB.
+     */
     private void loadBookingTable(JTextField searchField) {
         LoadTableUtility.bookingTable(tableModelBooking, this.bookingController, bookingTable, searchField);
     }
 
+    /**
+     * Load the data in the user table.
+     */
     private void loadUserTable() {
         LoadTableUtility.userTable(tableModelUsers, this.userController, userTable);
         clearSearchTxt();
     }
 
+    /**
+     * Loads the data searched by category in the user table from the DB.
+     */
     private void loadUserTable(JTextField searchTxt) {
         LoadTableUtility.userTable(
                 tableModelUsers,
@@ -381,15 +449,16 @@ public class SearchView extends JFrame {
         );
     }
 
+    /**
+     * Clears the search text field.
+     */
     private void clearSearchTxt() {
         searchTxt.setText("");
     }
 
-    private void headerMousePressed(MouseEvent evt) {
-        xMouse = evt.getX();
-        yMouse = evt.getY();
-    }
-
+    /**
+     * Deletes a guest from the table.
+     */
     private void deleteGuest() {
         int selectedRow = guestTable.getSelectedRow();
 
@@ -403,6 +472,9 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Deletes a booking from the table.
+     */
     private void deleteBooking() {
         int selectedRow = bookingTable.getSelectedRow();
 
@@ -416,6 +488,9 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Deletes a user from the table.
+     */
     private void deleteUser() {
         int selectedRow = userTable.getSelectedRow();
 
@@ -429,6 +504,9 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Updates a booking in the table.
+     */
     private void updateBooking() {
         int selectedRow = bookingTable.getSelectedRow();
 
@@ -444,6 +522,9 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Updates a guest in the table.
+     */
     private void updateGuest() {
         int selectedRow = guestTable.getSelectedRow();
 
@@ -459,6 +540,9 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Updates a user in the table.
+     */
     private void updateUser() {
         int selectedRow = userTable.getSelectedRow();
 
@@ -474,10 +558,25 @@ public class SearchView extends JFrame {
         }
     }
 
+    /**
+     * Handles the mouse-dragged event on the header for window dragging.
+     *
+     * @param evt The mouse event
+     */
     private void headerMouseDragged(MouseEvent evt) {
 
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
+    }
+
+    /**
+     * Handles the mouse-pressed event on the header.
+     *
+     * @param evt The mouse event
+     */
+    private void headerMousePressed(MouseEvent evt) {
+        xMouse = evt.getX();
+        yMouse = evt.getY();
     }
 }

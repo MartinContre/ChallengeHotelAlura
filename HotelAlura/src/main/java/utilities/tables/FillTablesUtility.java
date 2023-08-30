@@ -7,11 +7,21 @@ import model.User;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 
+/**
+ * Utility class for filling JTables with data from model objects.
+ */
 public class FillTablesUtility {
 
     private FillTablesUtility() {
 
     }
+
+    /**
+     * Fills the booking table with data from a list of Booking objects.
+     *
+     * @param bookingList The list of Booking objects.
+     * @param tableModel  The DefaultTableModel of the table.
+     */
     public static void fillBookingTable(List<Booking> bookingList, DefaultTableModel tableModel) {
         bookingList.forEach(booking ->
                 tableModel.addRow(
@@ -27,10 +37,16 @@ public class FillTablesUtility {
         );
     }
 
+    /**
+     * Fills the guest table with data from a list of Guest objects.
+     *
+     * @param guestList  The list of Guest objects.
+     * @param tableModel The DefaultTableModel of the table.
+     */
     public static void fillGuestTable(List<Guest> guestList, DefaultTableModel tableModel) {
         guestList.forEach(guest ->
                 tableModel.addRow(
-                        new Object[] {
+                        new Object[]{
                                 guest.getId(),
                                 guest.getName(),
                                 guest.getSurname(),
@@ -43,6 +59,12 @@ public class FillTablesUtility {
         );
     }
 
+    /**
+     * Fills the user table with data from a list of User objects.
+     *
+     * @param userList   The list of User objects.
+     * @param tableModel The DefaultTableModel of the table.
+     */
     public static void fillUserTable(List<User> userList, DefaultTableModel tableModel) {
         userList.forEach(user ->
                 tableModel.addRow(

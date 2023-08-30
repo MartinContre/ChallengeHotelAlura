@@ -13,6 +13,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Data Access Object (DAO) class for managing Booking entities.
+ * This class provides methods to interact with the database table related to bookings.
+ */
 public class BookingDao extends BaseDao<Booking> {
     private static final String INSERT_VALUES = "(?, ?, ?, ?, ?)";
     private static final Integer UPDATE_VALUES_COUNT = 6;
@@ -24,11 +28,22 @@ public class BookingDao extends BaseDao<Booking> {
             ColumnsKey.PAYMENT_METHOD.getKey(),
     };
 
+    /**
+     * Constructs a new instance of BookingDao.
+     *
+     * @param connection The database connection to use for operations.
+     */
     public BookingDao(Connection connection) {
         this.connection = connection;
         tableName = "bookings";
     }
 
+    /**
+     * Deletes an object from the database table by its id.
+     *
+     * @param id The ID string of the object to delete.
+     * @return The number of rows affected by the delete operation.
+     */
     public Integer delete(String id) {
         String sql = String.format("DELETE FROM %s WHERE %s = ?",
                 tableName, ColumnsKey.BOOKING_ID.getKey());
@@ -44,6 +59,12 @@ public class BookingDao extends BaseDao<Booking> {
         }
     }
 
+    /**
+     * Deletes the booking and the guest objects from the database by them IDS.
+     *
+     * @param bookingId The BOOKING ID string of the object to delete.
+     * @return The numbers of rows affected (booking and guest) by the delete operation.
+     */
     public Integer[] deleteEmbeddedGuest(String bookingId) {
         Integer[] deletedRows = new Integer[2];
         int guestIdToDelete = getGuestIdFromBookingId(bookingId);
@@ -56,6 +77,12 @@ public class BookingDao extends BaseDao<Booking> {
         return deletedRows;
     }
 
+    /**
+     * Retrieves all objects from the database table searching by booking id.
+     *
+     * @param bookingId The BOOKING ID string to search in the database table.
+     * @return An ArrayList containing all the objects retrieved from the table.
+     */
     public List<Booking> list(String bookingId) {
         List<Booking> result = new ArrayList<>();
         String sql = String.format(
@@ -95,6 +122,12 @@ public class BookingDao extends BaseDao<Booking> {
         }
     }
 
+    /**
+     * Creates a Booking model object from a result set.
+     *
+     * @param resultSet The result set containing data from the database.
+     * @return A Booking instance created from the result set.
+     */
     @Override
     protected Booking createModel(ResultSet resultSet) {
         try {
@@ -165,12 +198,18 @@ public class BookingDao extends BaseDao<Booking> {
         return booking.getId();
     }
 
+    /**
+     * Retrieves the id from the guests tables where the booking id where found.
+     *
+     * @param bookingId The BOOKING ID to search in the guest table.
+     * @return The id from the guest.
+     */
     private Integer getGuestIdFromBookingId(String bookingId) {
         String sql = String.format("""
-               SELECT g.%s
-               FROM %s b
-               JOIN %s g ON b.%s = g.%s
-               WHERE b.%s = ?""",
+                        SELECT g.%s
+                        FROM %s b
+                        JOIN %s g ON b.%s = g.%s
+                        WHERE b.%s = ?""",
                 ColumnsKey.ID.getKey(),
                 tableName,
                 TableNames.GUESTS.getKey(),

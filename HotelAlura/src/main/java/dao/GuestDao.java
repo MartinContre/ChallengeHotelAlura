@@ -9,6 +9,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The Data Access Object (DAO) class for managing Guest entities.
+ * This class provides methods to interact with the database table related to guests.
+ */
 public class GuestDao extends BaseDao<Guest> {
     private static final String INSERT_VALUES = "(?, ?, ?, ?, ?, ?)";
     private static final Integer UPDATE_VALUES_COUNT = 7;
@@ -17,11 +21,22 @@ public class GuestDao extends BaseDao<Guest> {
             ColumnsKey.NATIONALITY.getKey(), ColumnsKey.PHONE.getKey(), ColumnsKey.BOOKING_ID.getKey()
     };
 
+    /**
+     * Constructs a new instance of GuestDao.
+     *
+     * @param connection The database connection to use for operations.
+     */
     public GuestDao(Connection connection) {
         tableName = TableNames.GUESTS.getKey();
         this.connection = connection;
     }
 
+    /**
+     * Creates a Guest model object from a result set.
+     *
+     * @param resultSet The result set containing data from the database.
+     * @return A Guest instance created from the result set.
+     */
     @Override
     protected Guest createModel(ResultSet resultSet) {
         try {
@@ -40,6 +55,12 @@ public class GuestDao extends BaseDao<Guest> {
         }
     }
 
+    /**
+     * Searches for guests by surname in the database.
+     *
+     * @param surname The surname to search for.
+     * @return A list of Guest objects matching the search criteria.
+     */
     public List<Guest> searchGuest(String surname) {
         List<Guest> result = new ArrayList<>();
 
@@ -54,10 +75,10 @@ public class GuestDao extends BaseDao<Guest> {
                 tableName,
                 ColumnsKey.SURNAME.getKey());
         LOGGER.info("Getting list of guests by surname");
-        try (PreparedStatement statement = connection.prepareStatement(sql)){
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, surname.concat("%"));
             statement.execute();
-            try (ResultSet resultSet = statement.getResultSet()){
+            try (ResultSet resultSet = statement.getResultSet()) {
                 while (resultSet.next()) {
                     result.add(new Guest(
                             resultSet.getInt(ColumnsKey.ID.getKey()),
@@ -77,6 +98,13 @@ public class GuestDao extends BaseDao<Guest> {
         }
     }
 
+    /**
+     * Deletes a guest and its associated booking(s) from the database.
+     *
+     * @param guestId   The ID of the guest to be deleted.
+     * @param bookingId The ID of the associated booking to be deleted.
+     * @return An array containing the number of rows affected for guest deletion (index 0) and booking deletion (index 1).
+     */
     public Integer[] deleteEmbeddedBookings(int guestId, String bookingId) {
         Integer[] deleted = new Integer[2];
 

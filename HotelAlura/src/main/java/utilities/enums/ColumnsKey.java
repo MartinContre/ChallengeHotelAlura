@@ -3,6 +3,9 @@ package utilities.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Enum representing keys for database columns used in different tables.
+ */
 @Getter
 @AllArgsConstructor
 public enum ColumnsKey {

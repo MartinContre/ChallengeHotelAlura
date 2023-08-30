@@ -10,7 +10,33 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.regex.Matcher;
 
+/**
+ * Utility class for validating and handling form input for booking, guest, and user data.
+ * This class provides methods to validate form inputs for booking, guest, and user data.
+ * It also includes methods for checking and formatting dates, ages, and phone numbers.
+ * Usage:
+ * - Use the static methods in this class to validate form inputs and perform various checks.
+ * Example:
+ * To validate a booking form, use the {@link #isBookingFormValid(JDateChooser, JDateChooser, String)} method:
+ * boolean isValidBooking = FormValidationUtility.isBookingFormValid(checkInDateChooser, checkOutDateChooser, value);
+ * To validate a guest form, use the {@link #isGuestFormValid(String, String, JDateChooser, String)} method:
+ * boolean isValidGuest = FormValidationUtility.isGuestFormValid(name, surname, birthdateChooser, phone);
+ * To validate a user form, use the {@link #isUserFormValid(String, JComboBox, JPasswordField)} method:
+ * boolean isValidUser = FormValidationUtility.isUserFormValid(userName, userCategoryComboBox, passwordField);
+ * To validate a search field, use the {@link #validateSearchField(JTextField)} method:
+ * boolean isValidSearch = FormValidationUtility.validateSearchField(searchTextField);
+ */
 public class FormValidationUtility {
+
+    /**
+     * Validates if the provided booking form data is valid.
+     *
+     * @param checkIn  The check-in date.
+     * @param checkOut The check-out date.
+     * @param value    The booking value.
+     * @return {@code true} if the booking form data is valid.
+     * @throws IllegalArgumentException If the data is not valid.
+     */
     public static Boolean isBookingFormValid(
             JDateChooser checkIn, JDateChooser checkOut,
             String value
@@ -34,6 +60,16 @@ public class FormValidationUtility {
         return true;
     }
 
+    /**
+     * Validates if the provided guest form data is valid.
+     *
+     * @param name      The guest's name.
+     * @param surname   The guest's surname.
+     * @param birthdate The guest's birthdate.
+     * @param phone     The guest's phone number.
+     * @return {@code true} if the guest form data is valid.
+     * @throws IllegalArgumentException If the data is not valid.
+     */
     public static Boolean isGuestFormValid(
             String name, String surname, JDateChooser birthdate, String phone
     ) {
@@ -59,7 +95,7 @@ public class FormValidationUtility {
                             1. The last name must contain the first capital letter: Kings
                             2. Likewise if it is a compound last name: Reyes Hernandez
                             3. If it is a single last name, check that there are no blank spaces before or after."""
-                    );
+            );
             throw new IllegalArgumentException("Invalid surname");
         } else if (birthdate.getDate() == null) {
             UserShowMessages.showErrorMessage(
@@ -84,6 +120,15 @@ public class FormValidationUtility {
         return true;
     }
 
+    /**
+     * Validates if the provided user form data is valid.
+     *
+     * @param userName      The user's name.
+     * @param userCategory  The user's category.
+     * @param passwordField The user's password field.
+     * @return {@code true} if the user form data is valid.
+     * @throws IllegalArgumentException If the data is not valid.
+     */
     public static Boolean isUserFormValid(
             String userName, JComboBox<String> userCategory,
             JPasswordField passwordField
@@ -117,6 +162,13 @@ public class FormValidationUtility {
     }
 
 
+    /**
+     * Validates if the provided search field is valid.
+     *
+     * @param searchField The search field to validate.
+     * @return {@code true} if the search field is valid.
+     * @throws IllegalArgumentException If the search field is empty.
+     */
     public static boolean validateSearchField(JTextField searchField) {
         if (searchField.getText().isEmpty()) {
             UserShowMessages.showErrorMessage(
@@ -128,6 +180,12 @@ public class FormValidationUtility {
         return true;
     }
 
+    /**
+     * Checks if a given birthdate corresponds to an individual who is younger than 18 years old.
+     *
+     * @param birthDate The birthdate to be checked.
+     * @return {@code true} if the individual is younger than 18 years old, otherwise {@code false}.
+     */
     private static Boolean isOlder(Date birthDate) {
         LocalDate birthdate = DateConvertor.convertDateToLocalDate(birthDate);
         LocalDate today = LocalDate.now();

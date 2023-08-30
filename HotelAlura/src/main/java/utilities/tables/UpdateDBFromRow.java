@@ -18,12 +18,25 @@ import javax.swing.table.DefaultTableModel;
 import java.math.BigDecimal;
 import java.sql.Date;
 
+/**
+ * Utility class for updating database records based on modified data in table rows.
+ * This class contains methods to update guest, booking, and user records in the database,
+ * and displays messages indicating the success of the update operations.
+ */
 public class UpdateDBFromRow {
 
     private UpdateDBFromRow() {
 
     }
 
+    /**
+     * Updates a guest record in the database based on the modified data in the specified table row.
+     * Displays a message indicating the success of the update.
+     *
+     * @param tableModel The DefaultTableModel of the table.
+     * @param table      The JTable containing the data.
+     * @param controller The GuestController for managing guest data.
+     */
     public static void updateGuest(DefaultTableModel tableModel, JTable table, GuestController controller) {
         int id = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
         String guestName = tableModel.getValueAt(table.getSelectedRow(), 1).toString();
@@ -58,6 +71,14 @@ public class UpdateDBFromRow {
         );
     }
 
+    /**
+     * Updates a booking record in the database based on the modified data in the specified table row.
+     * Displays a message indicating the success of the update.
+     *
+     * @param tableModel The DefaultTableModel of the table.
+     * @param table      The JTable containing the data.
+     * @param controller The BookingController for managing booking data.
+     */
     public static void updateBooking(DefaultTableModel tableModel, JTable table, BookingController controller) {
         int id = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
         String bookingId = tableModel.getValueAt(table.getSelectedRow(), 1).toString();
@@ -81,6 +102,14 @@ public class UpdateDBFromRow {
         );
     }
 
+    /**
+     * Updates a user record in the database based on the modified data in the specified table row.
+     * Displays a message indicating the success of the update.
+     *
+     * @param tableModel The DefaultTableModel of the table.
+     * @param table      The JTable containing the data.
+     * @param controller The UserController for managing user data.
+     */
     public static void updateUser(DefaultTableModel tableModel, JTable table, UserController controller) {
         int id = Integer.parseInt(tableModel.getValueAt(table.getSelectedRow(), 0).toString());
         String userName = tableModel.getValueAt(table.getSelectedRow(), 1).toString();

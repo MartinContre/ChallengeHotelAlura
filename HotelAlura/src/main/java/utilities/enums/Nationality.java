@@ -3,6 +3,9 @@ package utilities.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * Enum representing various nationalities.
+ */
 @Getter
 @AllArgsConstructor
 public enum Nationality {
@@ -78,6 +81,11 @@ public enum Nationality {
 
     private final String displayName;
 
+    /**
+     * Get an array of all display names for the nationalities.
+     *
+     * @return Array of display names
+     */
     public static String[] getAllDisplayNames() {
         String[] displayNames = new String[values().length];
         for (int i = 0; i < values().length; i++) {

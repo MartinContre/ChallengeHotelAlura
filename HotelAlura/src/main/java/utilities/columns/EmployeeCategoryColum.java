@@ -7,11 +7,17 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * A custom TableCellEditor and TableCellRenderer for displaying and editing EmployeeCategory values in a JComboBox.
+ */
 public class EmployeeCategoryColum extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private final JComboBox<EmployeeCategory> comboBox;
     private EmployeeCategory selectedCategory;
 
+    /**
+     * Constructs an EmployeeCategoryColum instance.
+     */
     public EmployeeCategoryColum() {
         comboBox = new JComboBox<>(EmployeeCategory.values());
         comboBox.addActionListener(e -> stopCellEditing());

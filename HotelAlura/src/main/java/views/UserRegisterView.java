@@ -15,6 +15,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.Objects;
 
+/**
+ * The graphical user interface for registering new users in the Hotel Alura application.
+ * This view allows administrators to create new user accounts with different access privileges.
+ * Usage:
+ * - Create an instance of this class to display the user registration interface.
+ * Example:
+ * UserRegisterView 'userRegisterView' = new UserRegisterView();
+ * userRegisterView.setVisible(true);
+ */
 public class UserRegisterView extends JFrame {
 
     private final UserController userController;
@@ -26,6 +35,9 @@ public class UserRegisterView extends JFrame {
 
     int xMouse, yMouse;
 
+    /**
+     * Creates the user registration view.
+     */
     public UserRegisterView() {
         this.userController = new UserController();
 
@@ -43,7 +55,7 @@ public class UserRegisterView extends JFrame {
         JPanel header = getHeader();
         contentPane.add(header);
 
-        JPanel backBtn = getjPanel();
+        JPanel backBtn = getBackBtn();
         header.add(backBtn);
 
         backLabel = new JLabel("<");
@@ -163,11 +175,19 @@ public class UserRegisterView extends JFrame {
 
     }
 
+    /**
+     * Creates and returns a JPanel representing the exit button.
+     * This button, when clicked, navigates to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the exit button with appropriate properties and actions.
+     */
     private JPanel getExitBtn() {
         JPanel exitBtn = new JPanel();
         exitBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                JFrame principal = new MainMenu();
+                principal.setVisible(true);
                 dispose();
             }
 
@@ -189,6 +209,12 @@ public class UserRegisterView extends JFrame {
         return exitBtn;
     }
 
+    /**
+     * Creates and returns a JPanel representing the header area.
+     * This header area is designed to support mouse dragging for window movement.
+     *
+     * @return A JPanel containing the header with appropriate properties and actions.
+     */
     private JPanel getHeader() {
         JPanel header = new JPanel();
         header.setBounds(0, 0, 910, 36);
@@ -211,7 +237,13 @@ public class UserRegisterView extends JFrame {
         return header;
     }
 
-    private JPanel getjPanel() {
+    /**
+     * Creates and returns a JPanel representing the back button.
+     * This button provides navigation functionality to a user menu view and changes appearance on hover.
+     *
+     * @return A JPanel containing the edit (back) button with appropriate properties and actions.
+     */
+    private JPanel getBackBtn() {
         JPanel backBtn = new JPanel();
         backBtn.addMouseListener(new MouseAdapter() {
             @Override
@@ -239,6 +271,9 @@ public class UserRegisterView extends JFrame {
         return backBtn;
     }
 
+    /**
+     * Saves the user in the database
+     */
     private void saveUser() {
         String name = userNameTxt.getText();
 
@@ -263,21 +298,34 @@ public class UserRegisterView extends JFrame {
         }
     }
 
+    /**
+     * If the user was saved successfully, show a message.
+     */
+    private void showSaveMessage() {
+        SuccessDialog success = new SuccessDialog();
+        success.setVisible(true);
+        this.dispose();
+    }
+
+    /**
+     * Handles the header mouse-pressed event.
+     *
+     * @param evt The mouse event
+     */
     private void headerMousePressed(MouseEvent evt) {
         xMouse = evt.getX();
         yMouse = evt.getY();
     }
 
+    /**
+     * Handles the header mouse-dragged event.
+     *
+     * @param evt The mouse event
+     */
     private void headerMouseDragged(MouseEvent evt) {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
-    }
-
-    private void showSaveMessage() {
-        Successful success = new Successful();
-        success.setVisible(true);
-        this.dispose();
     }
 
 }

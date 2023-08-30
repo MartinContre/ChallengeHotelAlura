@@ -7,11 +7,17 @@ import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
+/**
+ * A custom TableCellEditor and TableCellRenderer for displaying and editing PaymentMethod values in a JComboBox.
+ */
 public class PaymentMethodColumn extends AbstractCellEditor implements TableCellRenderer, TableCellEditor {
 
     private final JComboBox<PaymentMethod> comboBox;
     private PaymentMethod selectedPaymentMethod;
 
+    /**
+     * Constructs a PaymentMethodColumn instance.
+     */
     public PaymentMethodColumn() {
         comboBox = new JComboBox<>(PaymentMethod.values());
         comboBox.addActionListener(e -> stopCellEditing());

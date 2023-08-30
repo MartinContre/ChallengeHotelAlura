@@ -8,10 +8,16 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * A custom TableCellEditor that allows copying the cell's content to the clipboard when clicked.
+ */
 public class CopyableCellEditor extends AbstractCellEditor implements TableCellEditor {
 
     private final JLabel copyLabel;
 
+    /**
+     * Constructs a CopyableCellEditor.
+     */
     public CopyableCellEditor() {
         copyLabel = new JLabel();
         copyLabel.addMouseListener(new MouseAdapter() {
