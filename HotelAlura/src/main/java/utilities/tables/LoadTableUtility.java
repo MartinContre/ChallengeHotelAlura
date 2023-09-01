@@ -18,6 +18,14 @@ import java.util.List;
 
 /**
  * Utility class for loading data into JTables and configuring table columns.
+ * This class provides methods to load guest, booking, and user data into specified table models,
+ * and it can also configure special rendering and editing for certain table columns.
+ * It supports both general data loading and loading based on search parameters.
+ * Usage:
+ * - Use the provided methods to load data into your JTable components.
+ * - You can load data into a table model for guests, bookings, or users, with or without search parameters.
+ * - Special column rendering and editing are configured for payment methods and user categories.
+ * - Error messages are displayed if invalid search parameters are provided.
  */
 public class LoadTableUtility {
 
@@ -73,7 +81,7 @@ public class LoadTableUtility {
 
     /**
      * Loads booking data into the specified table model using the provided controller, based on a search parameter.
-     * Also configures the payment method column for rendering and editing.
+     * Also configure the payment method column for rendering and editing.
      *
      * @param tableModel The DefaultTableModel of the table.
      * @param controller The BookingController to retrieve booking data.

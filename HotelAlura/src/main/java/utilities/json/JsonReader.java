@@ -12,10 +12,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * Utility class for reading JSON files and retrieving values.
+ * This class allows reading JSON files and extracting values from them using keys.
  */
 public class JsonReader {
     private static final Logger LOGGER = LogManager.getLogger(JsonReader.class);
@@ -33,7 +33,7 @@ public class JsonReader {
 
         if (!file.exists()) {
             try {
-                throw new FileNotFoundException("El archivo JSON no existe: " + filePath);
+                throw new FileNotFoundException("The JSON file does not exist: " + filePath);
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             }
@@ -43,7 +43,7 @@ public class JsonReader {
             jsonObject = (JsonObject) obj;
         } catch (IOException e) {
             LOGGER.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
-            throw new RuntimeException(Arrays.toString(e.getStackTrace()));
+            throw new RuntimeException("Error reading JSON file: " + e.getMessage());
         }
     }
 
@@ -57,13 +57,13 @@ public class JsonReader {
     public String[] getValues(String key) {
         try {
             if (jsonObject == null) {
-                throw new IllegalStateException("El archivo JSON no ha sido cargado");
+                throw new IllegalStateException("The JSON file has not been loaded.");
             }
 
             JsonElement element = jsonObject.get(key);
 
             if (element == null) {
-                throw new KeyNotFoundException("La clave no se encuentra en el archivo JSON: " + key);
+                throw new KeyNotFoundException("Key not found in the JSON file: " + key);
             }
 
             if (element.isJsonArray()) {
@@ -77,7 +77,7 @@ public class JsonReader {
                 return values;
             }
 
-            throw new KeyNotFoundException("El valor de la clave no es un arreglo en el archivo JSON: " + key);
+            throw new KeyNotFoundException("The value of the key is not an array in the JSON file: " + key + key);
         } catch (IllegalStateException | KeyNotFoundException e) {
             LOGGER.error(String.format("An exception occurred while reading the JSON file. Exception: %s", e));
             return new String[0];
@@ -95,7 +95,7 @@ public class JsonReader {
         JsonElement element = jsonObject.get(key);
         if (element == null) {
             try {
-                throw new KeyNotFoundException("La clave no se encuentra en el archivo JSON: " + key);
+                throw new KeyNotFoundException("Key not found in the JSON file: " + key + key);
             } catch (KeyNotFoundException e) {
                 throw new RuntimeException(e);
             }

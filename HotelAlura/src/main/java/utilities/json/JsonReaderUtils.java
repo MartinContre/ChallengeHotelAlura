@@ -5,6 +5,7 @@ import java.util.Map;
 
 /**
  * Utility class for managing JSON data files and their associated JsonReader instances.
+ * This class provides a convenient way to access JsonReader instances for different JSON data files.
  */
 public class JsonReaderUtils {
     private static final String CONFIG_DATA_FILE = "src/main/resources/config.json";

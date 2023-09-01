@@ -9,6 +9,8 @@ import java.util.List;
 
 /**
  * Utility class for filling JTables with data from model objects.
+ * This utility class provides methods to populate JTables with
+ * data from lists of Booking, Guest, and User objects.
  */
 public class FillTablesUtility {
 

@@ -10,6 +10,9 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * Utility class for deleting rows from JTables and associated controllers.
+ * This utility class provides methods for deleting rows from JTables and their associated controllers. It is designed
+ * to handle the deletion of guest, booking, and user records while also providing user-friendly feedback through
+ * messages.
  */
 public class DeleteRowsFromTable {
 

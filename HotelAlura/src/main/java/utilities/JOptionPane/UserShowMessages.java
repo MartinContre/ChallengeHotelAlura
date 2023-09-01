@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * Utility class for showing user messages using JOptionPane.
+ * A utility class for displaying user messages using JOptionPane dialogs.
  */
 public class UserShowMessages {
 

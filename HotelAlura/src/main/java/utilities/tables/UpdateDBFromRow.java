@@ -22,6 +22,10 @@ import java.sql.Date;
  * Utility class for updating database records based on modified data in table rows.
  * This class contains methods to update guest, booking, and user records in the database,
  * and displays messages indicating the success of the update operations.
+ * Usage:
+ * - Use the methods in this class to update guest, booking, and user records from table rows.
+ * - Each method takes a DefaultTableModel, JTable, and the respective controller as parameters.
+ * - After updating the records, a success message is displayed.
  */
 public class UpdateDBFromRow {
 
