@@ -31,7 +31,8 @@ You can perform actions like inset, modify, consult, and delete users, guests, a
 
 ## Demo Video
 
-A video showcasing the usage of the application is available [here](src/main/resources/usage/).
+A video showcasing the usage of the application is available
+[![Example of usage](src/main/resources/usage/MainMenu.png)](https://clipchamp.com/watch/XhciK946lgz)
 
 ## Contributing
 
